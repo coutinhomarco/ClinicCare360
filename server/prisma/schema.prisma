@@ -1,0 +1,67 @@
+// schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  username String    @unique
+  password String
+  role     String
+  email    String    @unique
+  phone    String?
+  patients Patient[]
+  doctors  Doctor[]
+}
+
+model Patient {
+  id           Int             @id @default(autoincrement())
+  userId       Int
+  user         User            @relation(fields: [userId], references: [id])
+  firstName    String
+  lastName     String
+  dob          DateTime
+  gender       String
+  address      String
+  records      MedicalRecord[]
+  appointments Appointment[]
+}
+
+model Doctor {
+  id             Int             @id @default(autoincrement())
+  userId         Int
+  user           User            @relation(fields: [userId], references: [id])
+  specialization String
+  availability   String // JSON representing the schedule
+  appointments   Appointment[]
+  MedicalRecord  MedicalRecord[]
+}
+
+model Appointment {
+  id              Int      @id @default(autoincrement())
+  patientId       Int
+  patient         Patient  @relation(fields: [patientId], references: [id])
+  doctorId        Int
+  doctor          Doctor   @relation(fields: [doctorId], references: [id])
+  appointmentDate DateTime
+  startTime       DateTime
+  endTime         DateTime
+  status          String
+}
+
+model MedicalRecord {
+  id          Int      @id @default(autoincrement())
+  patientId   Int
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  dateOfVisit DateTime
+  doctorId    Int
+  doctor      Doctor   @relation(fields: [doctorId], references: [id])
+  diagnosis   String
+  treatment   String
+}

@@ -1,4 +1,4 @@
-import { PatientModel } from '../../models/patientModel';
+import { PatientModel } from '../../models/PatientModel';
 
 export class PatientService {
     static listPatients() {

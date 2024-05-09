@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { DoctorCommandService } from '../services/doctor/DoctorCommandService';
+import { DoctorCommandService } from '../../services/doctor/DoctorCommandService';
 
 export class DoctorCommandController {
     static async createDoctor(req: Request, res: Response) {

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { DoctorQueryService } from '../services/doctor/DoctorQueryService';
+import { DoctorQueryService } from '../../services/doctor/DoctorQueryService';
 
 export class DoctorQueryController {
     static async listDoctors(req: Request, res: Response) {

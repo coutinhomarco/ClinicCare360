@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PatientService } from '../services/patientService';
+import { PatientService } from '../../services/patient/patientService';
 
 export class PatientController {
     static async listPatients(req: Request, res: Response) {

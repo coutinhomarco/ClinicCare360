@@ -1,4 +1,4 @@
-import { UserModel } from '../models/userModel';
+import { UserModel } from '../../models/userModel';
 
 export class UserService {
     static async listUsers() {

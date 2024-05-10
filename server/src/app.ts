@@ -3,6 +3,8 @@ import userRoutes from './api/routes/user/UserRoutes';
 import doctorRoutes from './api/routes/doctor/DoctorRoutes';
 import patientRoutes from './api/routes/patient/PatientRoutes';
 import appointmentRoutes from './api/routes/appointment/AppointmentRoutes';
+import medicalRecordsRoutes from './api/routes/medicalRecord/MedicalRecordRoutes';
+
 
 const app = express();
 
@@ -11,6 +13,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/medical-records', medicalRecordsRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello World!');

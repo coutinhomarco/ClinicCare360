@@ -1,31 +1,33 @@
 import { AppointmentModel } from '../../models/AppointmentModel';
-import { isValidAppointmentData, AppointmentData } from '../../utils/validations/appointmentValidation';
+import { isValidAppointmentData, AppointmentData, isValidAppointmentDataForUpdate, isValidAppointmentDelete} from '../../utils/validations/appointmentValidation';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 
 
 
 export class AppointmentCommandService {
     static async createAppointment(appointmentData: any): Promise<ServiceResponse<any>> {
-        if (!isValidAppointmentData(appointmentData)) {
-            return { status: 400, message: 'Invalid appointment data. Please ensure all fields are correctly formatted and provided.' };
+        const { status, message } = await isValidAppointmentData(appointmentData);
+        if (status !== 200) {
+            return { status, message };
         }
-        const newAppointment = await AppointmentModel.create(appointmentData);
-        return { status: 201, data: newAppointment };
+        await AppointmentModel.create(appointmentData);
+        return { status, message: 'Appointment created successfully'};
     }
 
     static async updateAppointment(id: number, appointmentData: Partial<AppointmentData>): Promise<ServiceResponse<any>> {
-        const fieldsToUpdate = Object.keys(appointmentData) as (keyof AppointmentData)[];
-        for (const key of fieldsToUpdate) {
-            if (appointmentData[key] === undefined) {
-                return { status: 400, message: `Invalid data for field: ${key}` };
-            }
+        const { status, message } = await isValidAppointmentDataForUpdate(id,appointmentData);
+        if (status !== 200) {
+            return { status, message };
         }
-        
-        const updatedAppointment = await AppointmentModel.update(id, appointmentData);
-        return { status: 200, data: updatedAppointment };
+        await AppointmentModel.update(id, appointmentData);
+        return { status: 200, message: 'Appointment updated successfully'};
     }
 
     static async deleteAppointment(id: number): Promise<ServiceResponse<void>> {
+        const { status, message } = await isValidAppointmentDelete(id);
+        if (status !== 200) {
+            return { status, message };
+        }
         await AppointmentModel.delete(id);
         return { status: 204 };
     }

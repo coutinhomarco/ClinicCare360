@@ -1,6 +1,6 @@
 import { PatientModel } from '../../models/PatientModel';
 import { UserModel } from '../../models/UserModel';
-import { PatientData, isValidPatientData } from '../../utils/validations/patientValidation';
+import { PatientData, isValidPatientData, isValidPatientDelete } from '../../utils/validations/patientValidation';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 
 
@@ -14,8 +14,8 @@ export class PatientCommandService {
             if (!isValidPatientData(patientData)) {
                 return { status: 400, message: 'Invalid patient data' };
             }
-            const newPatient = await PatientModel.create(patientData);
-            return { status: 201, data: newPatient };
+            await PatientModel.create(patientData);
+            return { status: 201, message: 'Patient created successfully'};
         } catch (error: any) {
             return { status: 500, message: error.message };
         }
@@ -33,7 +33,6 @@ export class PatientCommandService {
                     return { status: 400, message: `Invalid data for field: ${key}` };
                 }
             }
-
             const updatedPatient = await PatientModel.update(id, patientData);
             return { status: 200, data: updatedPatient };
         } catch (error: any) {
@@ -41,14 +40,14 @@ export class PatientCommandService {
         }
     }
 
-    static async deletePatient(id: number): Promise<ServiceResponse<void>> {
+    static async deletePatient(id: number): Promise<ServiceResponse<{status: number, message: string | undefined}>> {
         try {
-            const user = await UserModel.getUserById(id);
-            if (!user) {
-                return { status: 404, message: 'User not found' };
-            }   
+            const { status, message } = await isValidPatientDelete(id);
+            if (status !== 200) {
+                return { status, message };
+            }
             await PatientModel.delete(id);
-            return { status: 204 };
+            return { status: 204, message: 'Patient deleted successfully'};
         } catch (error: any) {
             return { status: 500, message: error.message };
         }

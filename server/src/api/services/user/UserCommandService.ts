@@ -12,10 +12,14 @@ export class UserCommandService {
             return { status: 400, message: 'Invalid user data' };
         }
         try {
+            const user = await UserModel.findUserByEmail(userData.email);
+            if (user) {
+                return { status: 500, message: 'This email is already being used.' };
+            }
             const hashedPassword = await bcrypt.hash(userData.password, 10);
             userData.password = hashedPassword;
-            const newUser = await UserModel.createUser(userData);
-            return { status: 201, data: newUser };
+            await UserModel.createUser(userData);
+            return { status: 201, message: 'User created'};
         } catch (error) {
             return { status: 500, message: 'Error creating user' };
         }
@@ -26,6 +30,10 @@ export class UserCommandService {
             return { status: 400, message: 'Invalid data provided' };
         }
         try {
+            const user = await UserModel.getUserById(id);
+            if (!user) {
+                return { status: 500, message: 'This account doens not exists.' };
+            }
             if (userData.password) {
                 userData.password = await bcrypt.hash(userData.password, 10);
             }
@@ -38,6 +46,10 @@ export class UserCommandService {
 
     static async deleteUser(id: number): Promise<ServiceResponse<void>> {
         try {
+            const user = await UserModel.getUserById(id);
+            if (!user) {
+                return { status: 500, message: 'This account doens not exists.' };
+            }
             await UserModel.deleteUser(id);
             return { status: 204 };
         } catch (error) {

@@ -20,4 +20,10 @@ export class UserCommandController {
         const result = await UserCommandService.deleteUser(id);
         res.status(result.status).send();
     }
+
+    static async loginUser(req: Request, res: Response) {
+        const { email, password } = req.body;
+        const result = await UserCommandService.loginUser(email, password);
+        result.data ? res.status(result.status).json(result.data) : res.status(result.status).json({ message: result.message });
+    }
 }

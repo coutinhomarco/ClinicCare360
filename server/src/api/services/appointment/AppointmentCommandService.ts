@@ -1,27 +1,12 @@
 import { AppointmentModel } from '../../models/AppointmentModel';
+import { isValidAppointmentData, AppointmentData } from '../../utils/validations/appointmentValidation';
 interface ServiceResponse<T> {
     status: number;
     data?: T;
     message?: string;
 }
 
-interface AppointmentData {
-    patientId: number;
-    doctorId: number;
-    appointmentDate: Date;
-    startTime: Date;
-    endTime: Date;
-    status: string;
-}
 
-function isValidAppointmentData(data: any): data is AppointmentData {
-    return typeof data.patientId === 'number' &&
-           typeof data.doctorId === 'number' &&
-           data.appointmentDate instanceof Date &&
-           data.startTime instanceof Date &&
-           data.endTime instanceof Date &&
-           typeof data.status === 'string';
-}
 export class AppointmentCommandService {
     static async createAppointment(appointmentData: any): Promise<ServiceResponse<any>> {
         if (!isValidAppointmentData(appointmentData)) {

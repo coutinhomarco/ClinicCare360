@@ -1,11 +1,8 @@
 import { MedicalRecordModel } from '../../models/MedicalRecordModel';
 import { isValidMedicalRecordData, MedicalRecordData } from '../../utils/validations/medicalRecordValidation';
 
-interface ServiceResponse<T> {
-    status: number;
-    data?: T;
-    message?: string;
-}
+import { ServiceResponse } from '../../utils/types/Response';
+
 
 export class MedicalRecordCommandService {
     static async createMedicalRecord(medicalRecordData: any): Promise<ServiceResponse<any>> {

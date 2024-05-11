@@ -1,10 +1,7 @@
 import { AppointmentModel } from '../../models/AppointmentModel';
 import { isValidAppointmentData, AppointmentData } from '../../utils/validations/appointmentValidation';
-interface ServiceResponse<T> {
-    status: number;
-    data?: T;
-    message?: string;
-}
+import { ServiceResponse } from '../../utils/types/Response';
+
 
 
 export class AppointmentCommandService {

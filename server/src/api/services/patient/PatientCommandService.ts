@@ -2,11 +2,8 @@ import { PatientModel } from '../../models/PatientModel';
 import { PatientData, isValidPatientData } from '../../utils/validations/patientValidation';
 
 
-interface ServiceResponse<T> {
-    status: number;
-    data?: T;
-    message?: string;
-}
+import { ServiceResponse } from '../../utils/types/Response';
+
 
 export class PatientCommandService {
     static async createPatient(patientData: any): Promise<ServiceResponse<any>> {

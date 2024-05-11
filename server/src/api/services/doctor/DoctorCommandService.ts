@@ -1,11 +1,8 @@
 import { DoctorModel } from '../../models/DoctorModel';
 import { isValidDoctorData, DoctorData } from '../../utils/validations/doctorValidation';
 
-interface ServiceResponse<T> {
-    status: number;
-    data?: T;
-    message?: string;
-}
+import { ServiceResponse } from '../../utils/types/Response';
+
 
 export class DoctorCommandService {
     static async createDoctor(doctorData: any): Promise<ServiceResponse<any>> {

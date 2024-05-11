@@ -3,33 +3,29 @@ import { MedicalRecordCommandService } from '../../services/medicalRecord/Medica
 
 export class MedicalRecordCommandController {
     static async createMedicalRecord(req: Request, res: Response) {
-        try {
-            const medicalRecordData = req.body;
-            const newMedicalRecord = await MedicalRecordCommandService.createMedicalRecord(medicalRecordData);
-            res.status(201).json(newMedicalRecord);
-        } catch (error: any) {
-            res.status(500).json({ message: error.message });
+        const medicalRecordData = req.body;
+        const result = await MedicalRecordCommandService.createMedicalRecord(medicalRecordData);
+        if (result.data) {
+            res.status(result.status).json(result.data);
+        } else {
+            res.status(result.status).json({ message: result.message });
         }
     }
 
     static async updateMedicalRecord(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            const medicalRecordData = req.body;
-            const updatedMedicalRecord = await MedicalRecordCommandService.updateMedicalRecord(id, medicalRecordData);
-            res.json(updatedMedicalRecord);
-        } catch (error: any) {
-            res.status(500).json({ message: error.message });
+        const id = parseInt(req.params.id);
+        const medicalRecordData = req.body;
+        const result = await MedicalRecordCommandService.updateMedicalRecord(id, medicalRecordData);
+        if (result.data) {
+            res.status(result.status).json(result.data);
+        } else {
+            res.status(result.status).json({ message: result.message });
         }
     }
 
     static async deleteMedicalRecord(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            await MedicalRecordCommandService.deleteMedicalRecord(id);
-            res.status(204).send();
-        } catch (error: any) {
-            res.status(500).json({ message: error.message });
-        }
+        const id = parseInt(req.params.id);
+        const result = await MedicalRecordCommandService.deleteMedicalRecord(id);
+        res.status(result.status).send();
     }
 }

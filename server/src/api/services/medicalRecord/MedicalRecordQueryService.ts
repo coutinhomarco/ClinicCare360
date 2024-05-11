@@ -1,5 +1,5 @@
 import { MedicalRecordModel } from '../../models/MedicalRecordModel';
-import { ServiceResponse } from '../../utils/types/ServiceResponse';
+import { ServiceResponse } from '../../../@types/ServiceResponse';
 
 
 export class MedicalRecordQueryService {

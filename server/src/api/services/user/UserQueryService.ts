@@ -1,6 +1,6 @@
 import { UserModel } from '../../models/UserModel';
 import { UserData } from '../../utils/validations/userValidation';
-import { ServiceResponse } from '../../utils/types/ServiceResponse';
+import { ServiceResponse } from '../../../@types/ServiceResponse';
 
 export class UserQueryService {
     static async listUsers(): Promise<ServiceResponse<UserData[]>> {

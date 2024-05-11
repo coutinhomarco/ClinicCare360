@@ -1,5 +1,5 @@
 import { DoctorModel } from '../../models/DoctorModel';
-import { ServiceResponse } from '../../utils/types/ServiceResponse';
+import { ServiceResponse } from '../../../@types/ServiceResponse';
 
 
 export class DoctorQueryService {

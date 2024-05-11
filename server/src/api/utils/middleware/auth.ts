@@ -1,19 +1,31 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
+interface UserPayload {
+    userId: number;
+    role: string;
+}
+
+// Extend Request locally using Generics
+interface RequestWithUser extends Request {
+    user?: UserPayload;
+}
+
 const secret: string = process.env.JWT_SECRET || 'secret';
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+export const authenticateToken = (req: RequestWithUser, res: Response, next: NextFunction) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // "Bearer TOKEN_HERE"
+    const token = authHeader && authHeader.split(' ')[1];  // "Bearer TOKEN_HERE"
 
     if (!token) {
         return res.sendStatus(401);
     }
 
-    jwt.verify(token, secret, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user as { userId: number; role: string }
+    jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+            return res.sendStatus(403);
+        }
+        req.user = decoded as UserPayload;
         next();
     });
 };

@@ -1,6 +1,6 @@
 import { AppointmentModel } from '../../models/AppointmentModel';
 import { isValidAppointmentData, AppointmentData } from '../../utils/validations/appointmentValidation';
-import { ServiceResponse } from '../../utils/types/ServiceResponse';
+import { ServiceResponse } from '../../../@types/ServiceResponse';
 
 
 

@@ -1,5 +1,5 @@
 import { AppointmentModel } from '../../models/AppointmentModel';
-import { ServiceResponse } from '../../utils/types/ServiceResponse';
+import { ServiceResponse } from '../../../@types/ServiceResponse';
 
 export class AppointmentQueryService {
     static async listAppointments(): Promise<ServiceResponse<any[]>> {

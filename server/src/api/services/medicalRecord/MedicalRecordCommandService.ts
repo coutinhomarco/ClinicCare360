@@ -1,7 +1,7 @@
 import { MedicalRecordModel } from '../../models/MedicalRecordModel';
 import { isValidMedicalRecordData, MedicalRecordData } from '../../utils/validations/medicalRecordValidation';
 
-import { ServiceResponse } from '../../utils/types/Response';
+import { ServiceResponse } from '../../utils/types/ServiceResponse';
 
 
 export class MedicalRecordCommandService {

@@ -1,7 +1,7 @@
 import { DoctorModel } from '../../models/DoctorModel';
 import { isValidDoctorData, DoctorData } from '../../utils/validations/doctorValidation';
 
-import { ServiceResponse } from '../../utils/types/Response';
+import { ServiceResponse } from '../../utils/types/ServiceResponse';
 
 
 export class DoctorCommandService {

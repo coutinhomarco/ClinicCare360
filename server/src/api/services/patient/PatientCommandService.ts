@@ -2,7 +2,7 @@ import { PatientModel } from '../../models/PatientModel';
 import { PatientData, isValidPatientData } from '../../utils/validations/patientValidation';
 
 
-import { ServiceResponse } from '../../utils/types/Response';
+import { ServiceResponse } from '../../utils/types/ServiceResponse';
 
 
 export class PatientCommandService {

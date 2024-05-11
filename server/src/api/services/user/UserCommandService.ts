@@ -3,7 +3,7 @@ import { UserModel } from '../../models/UserModel';
 import { UserData, isValidUserData } from '../../utils/validations/userValidation';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { ServiceResponse } from '../../utils/types/Response';
+import { ServiceResponse } from '../../utils/types/ServiceResponse';
 
 const secret: string = process.env.JWT_SECRET || 'secret';
 

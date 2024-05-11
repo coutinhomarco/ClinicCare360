@@ -1,16 +1,17 @@
 import express from 'express';
 import { MedicalRecordCommandController } from '../../controllers/medicalRecord/MedicalRecordCommandController';
 import { MedicalRecordQueryController } from '../../controllers/medicalRecord/MedicalRecordQueryController';
+import { authenticateToken } from '../../utils/middleware/auth';
 
 const router = express.Router();
 
 // Query endpoints
-router.get('/', MedicalRecordQueryController.listMedicalRecords);
-router.get('/:id', MedicalRecordQueryController.getMedicalRecord);
+router.get('/',authenticateToken , MedicalRecordQueryController.listMedicalRecords);
+router.get('/:id',authenticateToken , MedicalRecordQueryController.getMedicalRecord);
 
 // Command endpoints
-router.post('/', MedicalRecordCommandController.createMedicalRecord);
-router.put('/:id', MedicalRecordCommandController.updateMedicalRecord);
-router.delete('/:id', MedicalRecordCommandController.deleteMedicalRecord);
+router.post('/',authenticateToken , MedicalRecordCommandController.createMedicalRecord);
+router.put('/:id',authenticateToken , MedicalRecordCommandController.updateMedicalRecord);
+router.delete('/:id',authenticateToken , MedicalRecordCommandController.deleteMedicalRecord);
 
 export default router;

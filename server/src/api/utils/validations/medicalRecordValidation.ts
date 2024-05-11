@@ -46,19 +46,14 @@ export async function isValidMedicalRecordUpdateData(data: any): Promise<{status
             return { status: 400, message: `Invalid data for field: ${key}` };
         }
     }
-    const validation = typeof data.patientId === 'number' &&
-        typeof data.doctorId === 'number' &&
-        data.dateOfVisit instanceof Date &&
-        typeof data.diagnosis === 'string' &&
-        typeof data.treatment === 'string';
-    return { status: validation ? 200 : 400, message: validation ? undefined : 'Invalid medical record data'};
+    return { status: 200, message:undefined};
 }
 
 export async function isValidDelete(id: any): Promise<{status: number, message: string | undefined}> {
+    const validation = typeof id === 'number';
     const medicalRecord = await MedicalRecordModel.findOne(id);
     if (!medicalRecord) {
         return { status: 404, message: 'Medical record not found.' };
     }
-    const validation = typeof id === 'number';
     return { status: validation ? 200 : 400, message: validation ? undefined : 'Invalid medical record data'};
 }

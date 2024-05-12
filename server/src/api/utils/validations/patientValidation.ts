@@ -12,12 +12,8 @@ function isFieldMissing(data: any, fields: string[]): string | null {
 
 export async function isValidPatientData(data: PatientData): Promise<{ status: number, message: string | undefined }> {
     let message = isFieldMissing(data, ['userId', 'firstName', 'lastName', 'dob', 'gender', 'address']);
-    console.log(message);
-    
     if (message) return { status: 400, message };
-    const patient = await PatientModel.findOne(data.userId);
-    console.log({patient});
-    
+    const patient = await PatientModel.findOne(data.userId);    
     if (patient) {
         return { status: 400, message: 'Patient already exists.' };
     }

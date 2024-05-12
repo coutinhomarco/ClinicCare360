@@ -27,7 +27,7 @@ export class PatientCommandService {
                 return { status, message };
             }
             const updatedPatient = await PatientModel.update(id, patientData);
-            return { status: 200, data: updatedPatient };
+            return { status: 200, message: 'Patient updated successfully'};
         } catch (error: any) {
             return { status: 500, message: error.message };
         }

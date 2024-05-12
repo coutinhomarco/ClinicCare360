@@ -9,8 +9,8 @@ export class MedicalRecordCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }
-        const result = await MedicalRecordCommandService.createMedicalRecord(medicalRecordData);
-        return res.status(result.status).json({ message: "Medical record created sucessfuly"});
+        const {status: statusFinal, message: messageFinal} = await MedicalRecordCommandService.createMedicalRecord(medicalRecordData);
+        return res.status(statusFinal).json({ message: messageFinal});
     }
 
     static async updateMedicalRecord(req: Request, res: Response) {
@@ -20,8 +20,8 @@ export class MedicalRecordCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }
-        const result = await MedicalRecordCommandService.updateMedicalRecord(id, medicalRecordData);
-        return res.status(result.status).json(result.data);
+        const {status: statusFinal, message: messageFinal} = await MedicalRecordCommandService.updateMedicalRecord(id, medicalRecordData);
+        return res.status(statusFinal).json({message: messageFinal});
     }
 
     static async deleteMedicalRecord(req: Request, res: Response) {
@@ -30,7 +30,7 @@ export class MedicalRecordCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }
-        await MedicalRecordCommandService.deleteMedicalRecord(Number(id));
-        return res.status(status).json({ message: 'Medical record deleted successfully'});
+        const {status: statusFinal, message: messageFinal} = await MedicalRecordCommandService.deleteMedicalRecord(Number(id));
+        return res.status(statusFinal).json({ message: messageFinal});
     }
 }

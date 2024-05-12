@@ -9,8 +9,8 @@ export class AppointmentCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }
-        const result = await AppointmentCommandService.createAppointment(appointmentData);
-        return res.status(result.status).json(result.data);
+        const {status: statusFinal, message: messageFinal} = await AppointmentCommandService.createAppointment(appointmentData);
+        return res.status(statusFinal).json({message: messageFinal});
     }
 
     static async updateAppointment(req: Request, res: Response) {
@@ -20,8 +20,8 @@ export class AppointmentCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }
-        const result = await AppointmentCommandService.updateAppointment(id, appointmentData);
-        return res.status(result.status).json(result.data);
+        const {status: statusFinal, message: messageFinal} = await AppointmentCommandService.updateAppointment(id, appointmentData);
+        return res.status(statusFinal).json({message: messageFinal});
     }
 
     static async deleteAppointment(req: Request, res: Response) {
@@ -30,7 +30,7 @@ export class AppointmentCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }
-        await AppointmentCommandService.deleteAppointment(Number(id));
-        return res.status(status).json({ message: 'Appointment deleted successfully'});
+        const {status: statusFinal, message: messageFinal} =await AppointmentCommandService.deleteAppointment(Number(id));
+        return res.status(statusFinal).json({ message: messageFinal});
     }
 }

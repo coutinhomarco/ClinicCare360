@@ -4,13 +4,14 @@ import { isValidPatientData, isValidPatientDelete, isValidPatientUpdateData } fr
 
 export class PatientCommandController {
     static async createPatient(req: Request, res: Response) {
-        const patientData = req.body;        
+        const patientData = req.body;     
         const { status, message } = await isValidPatientData(patientData);      
         if (status !== 200) {
             return res.status(status).json({ message });
-        }  
-        await PatientCommandService.createPatient(patientData);
-        return res.status(status).json({ message: 'Patient created successfully' });
+        }
+        const patientToDb = {...patientData, dob: new Date(patientData.dob)}        
+        const {status: statusFinal, message: messageFinal} = await PatientCommandService.createPatient(patientToDb);
+        return res.status(statusFinal).json({ message: messageFinal});
 
     }
 
@@ -21,8 +22,8 @@ export class PatientCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }  
-        await PatientCommandService.updatePatient(id, patientData);
-        return res.status(status).json({ message: 'Patient updated successfully' });
+        const {status: statusFinal, message: messageFinal} = await PatientCommandService.updatePatient(id, patientData);
+        return res.status(statusFinal).json({ message: messageFinal });
     }
 
     static async deletePatient(req: Request, res: Response) {
@@ -31,7 +32,7 @@ export class PatientCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }
-        await PatientCommandService.deletePatient(Number(id));
-        res.status(204).json({ message: 'Patient deleted successfully' });
+        const {status: statusFinal, message: messageFinal} = await PatientCommandService.deletePatient(Number(id));
+        res.status(statusFinal).json({ message: messageFinal });
     }
 }

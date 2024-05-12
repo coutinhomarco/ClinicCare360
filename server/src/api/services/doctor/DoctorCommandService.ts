@@ -20,8 +20,8 @@ export class DoctorCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        const updatedDoctor = await DoctorModel.updateDoctor(id, doctorData);
-        return { status: 200, data: updatedDoctor };
+        await DoctorModel.updateDoctor(id, doctorData);
+        return { status: 200, message: 'Doctor updated'};
     }
 
     static async deleteDoctor(id: number): Promise<ServiceResponse<void>> {
@@ -30,6 +30,6 @@ export class DoctorCommandService {
             return { status, message };
         }
         await DoctorModel.deleteDoctor(id);
-        return { status: 204 };
+        return { status: 204, message: 'Doctor deleted successfully'};
     }
 }

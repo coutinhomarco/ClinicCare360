@@ -8,8 +8,8 @@ export class DoctorCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }
-        const result = await DoctorCommandService.createDoctor(doctorData);
-        return res.status(result.status).json({ message: "Doctor created sucessfuly" });
+        const {status: statusFinal, message: messageFinal} = await DoctorCommandService.createDoctor(doctorData);
+        return res.status(statusFinal).json({ message: messageFinal });
     }
 
     static async updateDoctor(req: Request, res: Response) {
@@ -19,8 +19,8 @@ export class DoctorCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }
-        const result = await DoctorCommandService.updateDoctor(id, doctorData);
-        return res.status(result.status).json({ message: "Doctor updated sucessfuly"});
+        const {status: statusFinal, message: messageFinal} = await DoctorCommandService.updateDoctor(id, doctorData);
+        return res.status(statusFinal).json({ message: messageFinal});
     }
 
     static async deleteDoctor(req: Request, res: Response) {
@@ -29,8 +29,8 @@ export class DoctorCommandController {
         if (status !== 200) {
             return res.status(status).json({ message });
         }
-        await DoctorCommandService.deleteDoctor(Number(id));
+        const {status: statusFinal, message: messageFinal} = await DoctorCommandService.deleteDoctor(Number(id));
 
-        return res.status(status).json({ message: 'Doctor deleted successfully'});
+        return res.status(statusFinal).json({ message: messageFinal});
     }
 }

@@ -9,8 +9,8 @@ export class UserCommandController {
         if (validation.status !== 200) {
             return res.status(validation.status).json({ message: validation.message });
         }
-        const result = await UserCommandService.createUser(userData);
-        res.status(result.status).json(result.data ? result.data : { message: result.message });
+        const {status: statusFinal, message: messageFinal} = await UserCommandService.createUser(userData);
+        res.status(statusFinal).json({message:messageFinal});
     }
 
     static async updateUser(req: Request, res: Response) {
@@ -20,8 +20,8 @@ export class UserCommandController {
         if (validation.status !== 200) {
             return res.status(validation.status).json({ message: validation.message });
         }
-        const result = await UserCommandService.updateUser(id, userData);
-        res.status(result.status).json(result.data ? result.data : { message: result.message });
+        const {status: statusFinal, message: messageFinal} = await UserCommandService.updateUser(id, userData);
+        res.status(statusFinal).json({ message: messageFinal });
     }
 
     static async deleteUser(req: Request, res: Response) {
@@ -30,8 +30,8 @@ export class UserCommandController {
         if (validation.status !== 200) {
             return res.status(validation.status).json({ message: validation.message });
         }
-        const result = await UserCommandService.deleteUser(id);
-        res.status(result.status).send();
+        const {status: statusFinal, message: messageFinal} = await UserCommandService.deleteUser(id);
+        res.status(statusFinal).json({ message: messageFinal });
     }
 
     static async loginUser(req: Request, res: Response) {
@@ -40,7 +40,7 @@ export class UserCommandController {
         if (!validations) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
-        const result = await UserCommandService.loginUser(email, password);
-        res.status(204).json({message: "User logged in successfully"});
+        const { status, data } = await UserCommandService.loginUser(email, password);
+        res.status(status).json({message: "User logged in successfully", data});
     }
 }

@@ -32,13 +32,13 @@ export class UserCommandService {
         try {
             const user = await UserModel.getUserById(id);
             if (!user) {
-                return { status: 500, message: 'This account doens not exists.' };
+                return { status: 500, message: "This account doens't not exists." };
             }
             if (userData.password) {
                 userData.password = await bcrypt.hash(userData.password, 10);
             }
-            const updatedUser = await UserModel.updateUser(id, userData);
-            return { status: 200, data: updatedUser };
+            await UserModel.updateUser(id, userData);
+            return { status: 200, message: "User updated"};
         } catch (error) {
             return { status: 500, message: 'Error updating user' };
         }
@@ -51,7 +51,7 @@ export class UserCommandService {
                 return { status: 500, message: 'This account doens not exists.' };
             }
             await UserModel.deleteUser(id);
-            return { status: 204 };
+            return { status: 202, message: 'User deleted'};
         } catch (error) {
             return { status: 500, message: 'Error deleting user' };
         }

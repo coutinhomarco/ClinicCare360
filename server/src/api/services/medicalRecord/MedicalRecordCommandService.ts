@@ -1,5 +1,5 @@
 import { MedicalRecordModel } from '../../models/MedicalRecordModel';
-import { isValidMedicalRecordData, isValidMedicalRecordUpdateData } from '../../utils/validations/medicalRecordValidation';
+import { isValidMedicalRecordData, isValidMedicalRecordDelete, isValidMedicalRecordUpdateData } from '../../utils/validations/medicalRecordValidation';
 import { MedicalRecordData } from '../../utils/interfaces/medicalRecord/medicalRecordValidation';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 
@@ -11,8 +11,8 @@ export class MedicalRecordCommandService {
             if (status !== 200) {
                 return { status, message };
             }
-            const newMedicalRecord = await MedicalRecordModel.create(medicalRecordData);
-            return { status: 201, data: newMedicalRecord };
+            await MedicalRecordModel.create(medicalRecordData);
+            return { status: 201, message: 'Medical record created successfully'};
         } catch (error:any) {
             return { status: 500, message: error.message };
         }
@@ -33,7 +33,11 @@ export class MedicalRecordCommandService {
     }
 
     static async deleteMedicalRecord(id: number): Promise<ServiceResponse<void>> {
+        const { status, message } = await isValidMedicalRecordDelete(id);
+        if (status !== 200) {
+            return { status, message };
+        }
         await MedicalRecordModel.delete(id);
-        return { status: 204 };
+        return { status: 204, message: 'Medical record deleted successfully'};
     }
 }

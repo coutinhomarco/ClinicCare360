@@ -29,6 +29,6 @@ export class AppointmentCommandService {
             return { status, message };
         }
         await AppointmentModel.delete(id);
-        return { status: 204 };
+        return { status: 204, message: 'Appointment deleted successfully'};
     }
 }

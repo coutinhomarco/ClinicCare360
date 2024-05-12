@@ -1,39 +1,31 @@
 import { AppointmentModel } from "../../models/AppointmentModel";
-export interface AppointmentData {
-    patientId: number;
-    doctorId: number;
-    appointmentDate: Date;
-    startTime: Date;
-    endTime: Date;
-    status: string;
-}
+import { AppointmentData } from '../interfaces/appointment/appointmentValidation';
 
-export  async function isValidAppointmentData(data: any): Promise<{status: number, message: string | undefined}> {
-    const fieldsToUpdate = Object.keys(data) as (keyof AppointmentData)[];
-    for (const key of fieldsToUpdate) {
-        if (data[key] === undefined) {
-            return { status: 400, message: `Invalid data for field: ${key}` };
+function isFieldMissing(data: any, fields: string[]): string | null {
+    for (const field of fields) {
+        if (data[field] === undefined || data[field] === null) {
+            return `Field '${field}' is required.`;
         }
     }
-    return {status: 200, message: undefined}
+    return null;
 }
 
-
-export async function isValidAppointmentDataForUpdate(id: number, data: any): Promise<{status: number, message: string | undefined}> {
-    const fieldsToUpdate = Object.keys(data) as (keyof AppointmentData)[];
-    for (const key of fieldsToUpdate) {
-        if (data[key] === undefined) {
-            return { status: 400, message: `Invalid data for field: ${key}` };
-        }
-    }
+export async function isValidAppointmentData(data: AppointmentData): Promise<{ status: number, message: string | undefined }> {
+    let message = isFieldMissing(data, ['patientId', 'doctorId', 'appointmentDate', 'startTime', 'endTime', 'status']);
+    if (message) return { status: 400, message };
     return { status: 200, message: undefined };
-}   
+}
 
-export async function isValidAppointmentDelete(id: any): Promise<{status: number, message: string | undefined}> {
-    const validation = typeof id === 'number';
-    const apointment = await AppointmentModel.findOne(id);
-    if (!apointment) {
+export async function isValidAppointmentUpdateData(data: AppointmentData): Promise<{ status: number, message: string | undefined }> {
+    let message = isFieldMissing(data, ['appointmentDate', 'startTime', 'endTime', 'status']);
+    if (message) return { status: 400, message };
+    return { status: 200, message: undefined };
+}
+
+export async function isValidAppointmentDelete(id: number): Promise<{ status: number, message: string | undefined }> {
+    const appointmentExists = await AppointmentModel.findOne(id);
+    if (!appointmentExists) {
         return { status: 404, message: 'Appointment not found.' };
     }
-    return { status: validation ? 200 : 400, message: validation ? undefined : 'Appointment id missing'};
-}   
+    return { status: 200, message: undefined };
+}

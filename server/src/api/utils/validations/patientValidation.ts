@@ -1,49 +1,31 @@
 import { PatientModel } from "../../models/PatientModel";
+import { PatientData } from '../interfaces/patient/patientValidation';
 
-export interface PatientData {
-    userId: number;
-    firstName: string;
-    lastName: string;
-    dob: Date;
-    gender: string;
-    address: string;
-}
-
-
-export async function isValidPatientData(data: any): Promise<{status: number, message: string | undefined}> {
-    const patient = await PatientModel.findOne(data.patientId);
-    if (patient) {
-        return { status: 500, message: 'A patient already exists with this id' };
-    }
-    const fieldsToUpdate = Object.keys(data) as (keyof PatientData)[];
-    for (const key of fieldsToUpdate) {
-        if (data[key] === undefined) {
-            return { status: 400, message: `Invalid data for field: ${key}` };
+function isFieldMissing(data: any, fields: string[]): string | null {
+    for (const field of fields) {
+        if (data[field] === undefined || data[field] === null) {
+            return `Field '${field}' is required.`;
         }
     }
-    return { status:200, message:undefined };
+    return null;
 }
 
-
-export async function isValidPatientUpdateData(data: any): Promise<{status: number, message: string | undefined}> {
-    const patient = await PatientModel.findOne(data.patientId);
-    if (!patient) {
-        return { status: 404, message: 'A patient related to this id does not exists.' };
-    }
-    const fieldsToUpdate = Object.keys(data) as (keyof PatientData)[];
-    for (const key of fieldsToUpdate) {
-        if (data[key] === undefined) {
-            return { status: 400, message: `Invalid data for field: ${key}` };
-        }
-    }
-    return { status: 200, message:undefined};
+export async function isValidPatientData(data: PatientData): Promise<{ status: number, message: string | undefined }> {
+    let message = isFieldMissing(data, ['userId', 'firstName', 'lastName', 'dob', 'gender', 'address']);
+    if (message) return { status: 400, message };
+    return { status: 200, message: undefined };
 }
 
-export async function isValidPatientDelete(id: any): Promise<{status: number, message: string | undefined}> {
-    const validation = typeof id === 'number';
+export async function isValidPatientUpdateData(data: PatientData): Promise<{ status: number, message: string | undefined }> {
+    let message = isFieldMissing(data, ['firstName', 'lastName', 'dob', 'gender', 'address']);
+    if (message) return { status: 400, message };
+    return { status: 200, message: undefined };
+}
+
+export async function isValidPatientDelete(id: number): Promise<{ status: number, message: string | undefined }> {
     const patient = await PatientModel.findOne(id);
     if (!patient) {
-        return { status: 404, message: 'Patient record not found.' };
+        return { status: 404, message: 'Patient not found.' };
     }
-    return { status: validation ? 200 : 400, message: validation ? undefined : 'Patient id is missing'};
+    return { status: 200, message: undefined };
 }

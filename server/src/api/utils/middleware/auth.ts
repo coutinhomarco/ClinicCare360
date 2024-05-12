@@ -6,7 +6,6 @@ interface UserPayload {
     role: string;
 }
 
-// Extend Request locally using Generics
 interface RequestWithUser extends Request {
     user?: UserPayload;
 }

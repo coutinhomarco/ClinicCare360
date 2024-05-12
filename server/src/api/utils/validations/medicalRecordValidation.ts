@@ -49,7 +49,7 @@ export async function isValidMedicalRecordUpdateData(data: any): Promise<{status
     return { status: 200, message:undefined};
 }
 
-export async function isValidDelete(id: any): Promise<{status: number, message: string | undefined}> {
+export async function isValidMedicalRecordDelete(id: any): Promise<{status: number, message: string | undefined}> {
     const validation = typeof id === 'number';
     const medicalRecord = await MedicalRecordModel.findOne(id);
     if (!medicalRecord) {

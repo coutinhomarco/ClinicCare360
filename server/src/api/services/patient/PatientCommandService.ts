@@ -21,6 +21,9 @@ export class PatientCommandService {
     static async updatePatient(id: number, patientData: Partial<PatientData>): Promise<ServiceResponse<any>> {
         try {
             const { status, message } = await isValidPatientUpdateData(patientData);
+            if (status !== 200) {
+                return { status, message };
+            }
             const updatedPatient = await PatientModel.update(id, patientData);
             return { status: 200, data: updatedPatient };
         } catch (error: any) {

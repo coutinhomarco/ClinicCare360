@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { AppointmentCommandService } from '../../services/appointment/AppointmentCommandService';
+import { isValidAppointmentDelete } from '../../utils/validations/appointmentValidation';
 
 export class AppointmentCommandController {
     static async createAppointment(req: Request, res: Response) {
         const appointmentData = req.body;
         const result = await AppointmentCommandService.createAppointment(appointmentData);
-        if (result.data) {
+        if (result.status === 200) {
             res.status(result.status).json(result.data);
         } else {
             res.status(result.status).json({ message: result.message });
@@ -16,7 +17,7 @@ export class AppointmentCommandController {
         const id = parseInt(req.params.id);
         const appointmentData = req.body;
         const result = await AppointmentCommandService.updateAppointment(id, appointmentData);
-        if (result.data) {
+        if (result.status === 200) {
             res.status(result.status).json(result.data);
         } else {
             res.status(result.status).json({ message: result.message });
@@ -24,8 +25,12 @@ export class AppointmentCommandController {
     }
 
     static async deleteAppointment(req: Request, res: Response) {
-        const id = parseInt(req.params.id);
-        const result = await AppointmentCommandService.deleteAppointment(id);
-        res.status(result.status).send();
+        const { id } = req.params;
+        const { status, message } = await isValidAppointmentDelete(id);
+        if (status !== 200) {
+            return res.status(status).json({ message });
+        }
+        await AppointmentCommandService.deleteAppointment(Number(id));
+        return res.status(status).json({ message: 'Appointment deleted successfully'});
     }
 }

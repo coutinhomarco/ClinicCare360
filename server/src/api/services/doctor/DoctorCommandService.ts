@@ -1,5 +1,6 @@
 import { DoctorModel } from '../../models/DoctorModel';
-import { isValidDoctorData, DoctorData, isValidDoctorDataForUpdate, isValidDoctorDelete } from '../../utils/validations/doctorValidation';
+import { isValidDoctorData, isValidDoctorUpdateData, isValidDoctorDelete } from '../../utils/validations/doctorValidation';
+import {DoctorData} from '../../utils/interfaces/doctor/doctorValidation';
 
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 
@@ -15,7 +16,8 @@ export class DoctorCommandService {
     }
 
     static async updateDoctor(id: number, doctorData: Partial<DoctorData>): Promise<ServiceResponse<any>> {
-        const { status, message } = await isValidDoctorDataForUpdate(id, doctorData);
+        let doctorDataCopy = { ...doctorData, userId: id, specialization: doctorData.specialization || "", availability: doctorData.specialization || ""};
+        const { status, message } = await isValidDoctorUpdateData(doctorDataCopy);
         if (status !== 200) {
             return { status, message };
         }

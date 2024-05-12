@@ -25,7 +25,7 @@ export class DoctorCommandController {
 
     static async deleteDoctor(req: Request, res: Response) {
         const { id } = req.params;
-        const { status, message } = await isValidDoctorDelete(id);
+        const { status, message } = await isValidDoctorDelete(Number(id));
         if (status !== 200) {
             return res.status(status).json({ message });
         }

@@ -12,12 +12,24 @@ function isFieldMissing(data: any, fields: string[]): string | null {
 
 export async function isValidPatientData(data: PatientData): Promise<{ status: number, message: string | undefined }> {
     let message = isFieldMissing(data, ['userId', 'firstName', 'lastName', 'dob', 'gender', 'address']);
+    console.log(message);
+    
     if (message) return { status: 400, message };
+    const patient = await PatientModel.findOne(data.userId);
+    console.log({patient});
+    
+    if (patient) {
+        return { status: 400, message: 'Patient already exists.' };
+    }
     return { status: 200, message: undefined };
 }
 
-export async function isValidPatientUpdateData(data: PatientUpdateData): Promise<{ status: number, message: string | undefined }> {
+export async function isValidPatientUpdateData(id: number, data: PatientUpdateData): Promise<{ status: number, message: string | undefined }> {
     let message = isFieldMissing(data, ['firstName', 'lastName', 'dob', 'gender', 'address']);
+    const patient = await PatientModel.findOne(id);
+    if (!patient) {
+        return { status: 400, message: "Patient doesn't exist." };
+    }
     if (message) return { status: 400, message };
     return { status: 200, message: undefined };
 }

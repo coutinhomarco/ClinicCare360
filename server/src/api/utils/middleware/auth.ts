@@ -13,18 +13,24 @@ interface RequestWithUser extends Request {
 const secret: string = process.env.JWT_SECRET || 'secret';
 
 export const authenticateToken = (req: RequestWithUser, res: Response, next: NextFunction) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];  // "Bearer TOKEN_HERE"
-
-    if (!token) {
-        return res.sendStatus(401);
-    }
-
-    jwt.verify(token, secret, (err, decoded) => {
-        if (err) {
-            return res.sendStatus(403);
+    try {        
+        const authHeader = req.headers['authorization'];
+        
+        const token = authHeader && authHeader.split(' ')[1];  // "Bearer TOKEN_HERE"
+        
+        if (!token) {
+            return res.sendStatus(401);
         }
-        req.user = decoded as UserPayload;
-        next();
-    });
+
+        jwt.verify(token, secret, (err, decoded) => {
+            if (err) {
+                return res.sendStatus(403);
+            }
+            req.user = decoded as UserPayload;
+            next();
+        });
+    } catch (error) {
+        console.log(error);
+        next(error)
+    }
 };

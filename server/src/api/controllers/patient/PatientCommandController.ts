@@ -4,24 +4,25 @@ import { isValidPatientData, isValidPatientDelete, isValidPatientUpdateData } fr
 
 export class PatientCommandController {
     static async createPatient(req: Request, res: Response) {
-        const patientData = req.body;
-        const { status, message } = await isValidPatientData(patientData);
-        if (status === 200) {
-            res.status(status).json({ message: 'Patient created successfully' });
-        } else {
-            res.status(status).json({ message: message });
-        }
+        const patientData = req.body;        
+        const { status, message } = await isValidPatientData(patientData);      
+        if (status !== 200) {
+            return res.status(status).json({ message });
+        }  
+        await PatientCommandService.createPatient(patientData);
+        return res.status(status).json({ message: 'Patient created successfully' });
+
     }
 
     static async updatePatient(req: Request, res: Response) {
         const id = parseInt(req.params.id);
         const patientData = req.body;
-        const { status, message } = await isValidPatientUpdateData(patientData);
-        if (status === 200) {
-            res.status(status).json({ message: 'Patient updated successfully' });
-        } else {
-            res.status(status).json({ message: message });
-        }
+        const { status, message } = await isValidPatientUpdateData(id, patientData);
+        if (status !== 200) {
+            return res.status(status).json({ message });
+        }  
+        await PatientCommandService.updatePatient(id, patientData);
+        return res.status(status).json({ message: 'Patient updated successfully' });
     }
 
     static async deletePatient(req: Request, res: Response) {

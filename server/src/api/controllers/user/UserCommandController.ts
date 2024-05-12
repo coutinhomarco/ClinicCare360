@@ -36,7 +36,11 @@ export class UserCommandController {
 
     static async loginUser(req: Request, res: Response) {
         const { email, password } = req.body;
+        const validations = email && password && typeof email === 'string' && typeof password === 'string';
+        if (!validations) {
+            return res.status(400).json({ message: 'Invalid email or password' });
+        }
         const result = await UserCommandService.loginUser(email, password);
-        res.status(result.status).json(result.data ? result.data : { message: result.message });
+        res.status(204).json({message: "User logged in successfully"});
     }
 }

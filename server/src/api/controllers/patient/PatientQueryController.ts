@@ -9,7 +9,7 @@ export class PatientQueryController {
 
     static async getPatient(req: Request, res: Response) {
         const id = parseInt(req.params.id);
-        const result = await PatientQueryService.getPatient(id);
+        const result = await PatientQueryService.getPatient(Number(id));
         res.status(result.status).json(result.data || { message: result.message });
     }
 }

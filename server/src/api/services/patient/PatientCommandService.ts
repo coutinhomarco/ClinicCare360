@@ -7,6 +7,8 @@ import { PatientData } from '../../utils/interfaces/patient/patientValidation';
 export class PatientCommandService {
     static async createPatient(patientData: any): Promise<ServiceResponse<any>> {
         try {
+            console.log({patientData});
+            
             const { status, message } = await isValidPatientData(patientData);
             if (status !== 200) {
                 return { status, message };
@@ -20,7 +22,7 @@ export class PatientCommandService {
 
     static async updatePatient(id: number, patientData: Partial<PatientData>): Promise<ServiceResponse<any>> {
         try {
-            const { status, message } = await isValidPatientUpdateData(patientData);
+            const { status, message } = await isValidPatientUpdateData(id, patientData);
             if (status !== 200) {
                 return { status, message };
             }

@@ -1,26 +1,26 @@
 import { Request, Response } from 'express';
 import { DoctorCommandService } from '../../services/doctor/DoctorCommandService';
-import {isValidDoctorDelete} from '../../utils/validations/doctorValidation';
+import {isValidDoctorDelete,isValidDoctorData, isValidDoctorUpdateData} from '../../utils/validations/doctorValidation';
 export class DoctorCommandController {
     static async createDoctor(req: Request, res: Response) {
         const doctorData = req.body;
-        const result = await DoctorCommandService.createDoctor(doctorData);
-        if (result.status === 200) {
-            res.status(result.status).json(result.data);
-        } else {
-            res.status(result.status).json({ message: result.message });
+        const { status, message } = await isValidDoctorData(doctorData);
+        if (status !== 200) {
+            return res.status(status).json({ message });
         }
+        const result = await DoctorCommandService.createDoctor(doctorData);
+        return res.status(result.status).json({ message: "Doctor created sucessfuly" });
     }
 
     static async updateDoctor(req: Request, res: Response) {
         const id = parseInt(req.params.id);
         const doctorData = req.body;
-        const result = await DoctorCommandService.updateDoctor(id, doctorData);
-        if (result.status === 200) {
-            res.status(result.status).json(result.data);
-        } else {
-            res.status(result.status).json({ message: result.message });
+        const { status, message } = await isValidDoctorUpdateData(doctorData);
+        if (status !== 200) {
+            return res.status(status).json({ message });
         }
+        const result = await DoctorCommandService.updateDoctor(id, doctorData);
+        return res.status(result.status).json({ message: "Doctor updated sucessfuly"});
     }
 
     static async deleteDoctor(req: Request, res: Response) {

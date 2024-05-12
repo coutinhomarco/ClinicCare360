@@ -1,5 +1,5 @@
 import { PatientModel } from "../../models/PatientModel";
-import { PatientData } from '../interfaces/patient/patientValidation';
+import { PatientData, PatientUpdateData } from '../interfaces/patient/patientValidation';
 
 function isFieldMissing(data: any, fields: string[]): string | null {
     for (const field of fields) {
@@ -16,7 +16,7 @@ export async function isValidPatientData(data: PatientData): Promise<{ status: n
     return { status: 200, message: undefined };
 }
 
-export async function isValidPatientUpdateData(data: PatientData): Promise<{ status: number, message: string | undefined }> {
+export async function isValidPatientUpdateData(data: PatientUpdateData): Promise<{ status: number, message: string | undefined }> {
     let message = isFieldMissing(data, ['firstName', 'lastName', 'dob', 'gender', 'address']);
     if (message) return { status: 400, message };
     return { status: 200, message: undefined };

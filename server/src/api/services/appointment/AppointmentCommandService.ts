@@ -1,7 +1,7 @@
 import { AppointmentModel } from '../../models/AppointmentModel';
-import { isValidAppointmentData, AppointmentData, isValidAppointmentDataForUpdate, isValidAppointmentDelete} from '../../utils/validations/appointmentValidation';
+import { isValidAppointmentData, isValidAppointmentUpdateData, isValidAppointmentDelete} from '../../utils/validations/appointmentValidation';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
-
+import {AppointmentData} from '../../utils/interfaces/appointment/appointmentValidation';
 
 
 export class AppointmentCommandService {
@@ -15,7 +15,7 @@ export class AppointmentCommandService {
     }
 
     static async updateAppointment(id: number, appointmentData: Partial<AppointmentData>): Promise<ServiceResponse<any>> {
-        const { status, message } = await isValidAppointmentDataForUpdate(id,appointmentData);
+        const { status, message } = await isValidAppointmentUpdateData(appointmentData);
         if (status !== 200) {
             return { status, message };
         }

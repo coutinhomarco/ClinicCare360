@@ -1,8 +1,8 @@
 import { PatientModel } from '../../models/PatientModel';
 import { UserModel } from '../../models/UserModel';
-import { PatientData, isValidPatientData, isValidPatientDelete, isValidPatientUpdateData } from '../../utils/validations/patientValidation';
+import {  isValidPatientData, isValidPatientDelete, isValidPatientUpdateData } from '../../utils/validations/patientValidation';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
-
+import { PatientData } from '../../utils/interfaces/patient/patientValidation';
 
 export class PatientCommandService {
     static async createPatient(patientData: any): Promise<ServiceResponse<any>> {

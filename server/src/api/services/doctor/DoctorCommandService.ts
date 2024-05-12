@@ -16,8 +16,7 @@ export class DoctorCommandService {
     }
 
     static async updateDoctor(id: number, doctorData: Partial<DoctorData>): Promise<ServiceResponse<any>> {
-        let doctorDataCopy = { ...doctorData, userId: id, specialization: doctorData.specialization || "", availability: doctorData.specialization || ""};
-        const { status, message } = await isValidDoctorUpdateData(doctorDataCopy);
+        const { status, message } = await isValidDoctorUpdateData(doctorData);
         if (status !== 200) {
             return { status, message };
         }

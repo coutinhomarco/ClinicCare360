@@ -1,5 +1,6 @@
 import { DoctorModel } from "../../models/DoctorModel";
 import { DoctorData } from '../interfaces/doctor/doctorValidation';
+import {DoctorUpdateData} from '../../utils/interfaces/doctor/doctorValidation';
 
 function isFieldMissing(data: any, fields: string[]): string | null {
     for (const field of fields) {
@@ -20,7 +21,7 @@ export async function isValidDoctorData(data: DoctorData): Promise<{ status: num
     return { status: 200, message: undefined };
 }
 
-export async function isValidDoctorUpdateData(data: DoctorData): Promise<{ status: number, message: string | undefined }> {
+export async function isValidDoctorUpdateData(data: DoctorUpdateData): Promise<{ status: number, message: string | undefined }> {
     let message = isFieldMissing(data, ['specialization', 'availability']);
     if (message) return { status: 400, message };
     return { status: 200, message: undefined };

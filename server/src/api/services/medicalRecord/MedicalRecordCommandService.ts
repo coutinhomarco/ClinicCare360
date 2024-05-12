@@ -1,6 +1,6 @@
 import { MedicalRecordModel } from '../../models/MedicalRecordModel';
-import { isValidMedicalRecordData, isValidMedicalRecordUpdateData, MedicalRecordData } from '../../utils/validations/medicalRecordValidation';
-
+import { isValidMedicalRecordData, isValidMedicalRecordUpdateData } from '../../utils/validations/medicalRecordValidation';
+import { MedicalRecordData } from '../../utils/interfaces/medicalRecord/medicalRecordValidation';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 
 //patient and doctor could not exist.

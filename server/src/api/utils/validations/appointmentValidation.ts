@@ -1,5 +1,5 @@
 import { AppointmentModel } from "../../models/AppointmentModel";
-import { AppointmentData } from '../interfaces/appointment/appointmentValidation';
+import { AppointmentData, AppointmentUpdateData } from '../interfaces/appointment/appointmentValidation';
 
 function isFieldMissing(data: any, fields: string[]): string | null {
     for (const field of fields) {
@@ -10,13 +10,13 @@ function isFieldMissing(data: any, fields: string[]): string | null {
     return null;
 }
 
-export async function isValidAppointmentData(data: AppointmentData): Promise<{ status: number, message: string | undefined }> {
+export async function isValidAppointmentData(data: AppointmentUpdateData): Promise<{ status: number, message: string | undefined }> {
     let message = isFieldMissing(data, ['patientId', 'doctorId', 'appointmentDate', 'startTime', 'endTime', 'status']);
     if (message) return { status: 400, message };
     return { status: 200, message: undefined };
 }
 
-export async function isValidAppointmentUpdateData(data: AppointmentData): Promise<{ status: number, message: string | undefined }> {
+export async function isValidAppointmentUpdateData(data: AppointmentUpdateData): Promise<{ status: number, message: string | undefined }> {
     let message = isFieldMissing(data, ['appointmentDate', 'startTime', 'endTime', 'status']);
     if (message) return { status: 400, message };
     return { status: 200, message: undefined };

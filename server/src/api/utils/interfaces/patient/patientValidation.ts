@@ -6,3 +6,11 @@ export interface PatientData {
     gender: string;
     address: string;
 }
+
+export interface PatientUpdateData {
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    dob?: Date | undefined
+    gender?: string | undefined;
+    address?: string | undefined;
+}

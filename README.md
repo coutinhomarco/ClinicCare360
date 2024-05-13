@@ -78,9 +78,15 @@ BullMQ is integrated to handle asynchronous processing of commands and queries, 
 
 ## Database Schema
 
-The following diagram shows the database structure for CliniCare:
+The following diagram shows the database structure for CliniCare360:
 
 ![Database Schema](docs/database.png)
+
+## Request flow
+
+The following diagram shows how the requests are handled for CliniCare360
+![Request Flow](docs/flow.png)
+
 
 ## Built With
 

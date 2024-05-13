@@ -5,11 +5,14 @@ import { authenticateToken } from '../../utils/middleware/auth';
 
 const router = express.Router();
 
-router.get('/' ,authenticateToken ,UserQueryController.listUsers);
-router.get('/:id',authenticateToken , UserQueryController.getUser);
+// Query endpoints
+router.get('/', authenticateToken, UserQueryController.listUsers);
+router.get('/:id', authenticateToken, UserQueryController.getUser);
+
+// Command endpoints
 router.post('/', UserCommandController.createUser);
-router.put('/:id',authenticateToken , UserCommandController.updateUser);
-router.delete('/:id',authenticateToken , UserCommandController.deleteUser);
+router.put('/:id', authenticateToken, UserCommandController.updateUser);
+router.delete('/:id', authenticateToken, UserCommandController.deleteUser);
 router.post('/login', UserCommandController.loginUser);
 
 export default router;

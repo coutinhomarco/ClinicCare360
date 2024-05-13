@@ -1,29 +1,24 @@
+import { queryQueue, queryQueueEvents } from '../../../config/bullmq';
+import { ServiceResponse } from '../../../@types/ServiceResponse';
 import { UserModel } from '../../models/UserModel';
 import { UserData } from '../../utils/validations/userValidation';
-import { ServiceResponse } from '../../../@types/ServiceResponse';
 
 export class UserQueryService {
     static async listUsers(): Promise<ServiceResponse<UserData[]>> {
-        try {
-            const users = await UserModel.getAllUsers();
-            return { status: 200, data: users };
-        } catch (error) {
-            return { status: 500, message: 'Failed to retrieve users' };
-        }
+        const job = await queryQueue.add('listUsers', {});
+        const result = await job.waitUntilFinished(queryQueueEvents);
+        return { status: 200, data: result };
     }
 
     static async findUser(id: number): Promise<ServiceResponse<UserData>> {
         if (!id) {
             return { status: 400, message: 'Invalid user ID' };
         }
-        try {
-            const user = await UserModel.getUserById(id);
-            if (!user) {
-                return { status: 404, message: "User not found" };
-            }
-            return { status: 200, data: user };
-        } catch (error) {
-            return { status: 500, message: 'Error finding user' };
+        const job = await queryQueue.add('getUser', { id });
+        const result = await job.waitUntilFinished(queryQueueEvents);
+        if (!result) {
+            return { status: 404, message: 'User not found' };
         }
+        return { status: 200, data: result };
     }
 }

@@ -10,8 +10,9 @@ export class PatientCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('createPatient', patientData);
-        return { status: 201, message: 'Patient created successfully' };
+        const jobId = `createPatient-${patientData.email}`;
+        await commandQueue.add('createPatient', patientData, { jobId });
+        return { status: 201, message: 'Patient creation job added to queue' };
     }
 
     static async updatePatient(id: number, patientData: Partial<PatientData>): Promise<ServiceResponse<any>> {
@@ -19,8 +20,9 @@ export class PatientCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('updatePatient', { id, ...patientData });
-        return { status: 200, message: 'Patient updated successfully' };
+        const jobId = `updatePatient-${id}`;
+        await commandQueue.add('updatePatient', { id, ...patientData }, { jobId });
+        return { status: 200, message: 'Patient update job added to queue' };
     }
 
     static async deletePatient(id: number): Promise<ServiceResponse<void>> {
@@ -28,7 +30,8 @@ export class PatientCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('deletePatient', { id });
-        return { status: 204, message: 'Patient deleted successfully' };
+        const jobId = `deletePatient-${id}`;
+        await commandQueue.add('deletePatient', { id }, { jobId });
+        return { status: 204, message: 'Patient deletion job added to queue' };
     }
 }

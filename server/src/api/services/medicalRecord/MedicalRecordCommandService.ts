@@ -10,8 +10,9 @@ export class MedicalRecordCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('createMedicalRecord', medicalRecordData);
-        return { status: 201, message: 'Medical record created successfully' };
+        const jobId = `createMedicalRecord-${medicalRecordData.patientId}-${medicalRecordData.dateOfVisit}`;
+        await commandQueue.add('createMedicalRecord', medicalRecordData, { jobId });
+        return { status: 201, message: 'Medical record creation job added to queue' };
     }
 
     static async updateMedicalRecord(id: number, medicalRecordData: Partial<MedicalRecordData>): Promise<ServiceResponse<any>> {
@@ -19,8 +20,9 @@ export class MedicalRecordCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('updateMedicalRecord', { id, ...medicalRecordData });
-        return { status: 200, message: 'Medical record updated successfully' };
+        const jobId = `updateMedicalRecord-${id}`;
+        await commandQueue.add('updateMedicalRecord', { id, ...medicalRecordData }, { jobId });
+        return { status: 200, message: 'Medical record update job added to queue' };
     }
 
     static async deleteMedicalRecord(id: number): Promise<ServiceResponse<void>> {
@@ -28,7 +30,8 @@ export class MedicalRecordCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('deleteMedicalRecord', { id });
-        return { status: 204, message: 'Medical record deleted successfully' };
+        const jobId = `deleteMedicalRecord-${id}`;
+        await commandQueue.add('deleteMedicalRecord', { id }, { jobId });
+        return { status: 204, message: 'Medical record deletion job added to queue' };
     }
 }

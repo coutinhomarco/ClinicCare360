@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client';
+import puppeteer from 'puppeteer';
+import { createAtestado } from '../utils/functions/createAtestado';
 
 const prisma = new PrismaClient();
 
@@ -51,5 +53,29 @@ export class MedicalRecordModel {
         return await prisma.medicalRecord.delete({
             where: { id }
         });
+    }
+
+    static async generateAtestado(record: any) {
+        const html = createAtestado({
+            diagnosis: {
+                hospitalInfo: {
+                    name: 'Hospital Name',
+                    addressLine: record?.patient.address || 'Address Line',
+                    city: "City Name"
+                },
+                description: record?.diagnosis || 'Diagnosis',
+                diseaseCode: "Disease Code",
+            },
+            dateOfVisit: record?.dateOfVisit.toLocaleDateString() || 'Date of Visit',
+            doctor: `${record?.doctor.firstName} ${record?.doctor.lastName}` || 'Doctor Name',
+            doctorId: record?.doctor.id.toString() || 'Doctor ID',
+        });
+
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(html);
+        const pdfBuffer = await page.pdf({ format: 'A4' });
+        await browser.close();
+        return pdfBuffer;
     }
 }

@@ -13,6 +13,8 @@ export class DoctorModel {
     }
 
     static async createDoctor(doctorData: any) {
+        console.log('Creating doctor with data:', doctorData);
+        
         return await prisma.doctor.create({
             data: doctorData
         });

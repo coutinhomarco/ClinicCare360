@@ -11,6 +11,11 @@ import { PatientCommandService } from '../api/services/patient/PatientCommandSer
 import { PatientQueryService } from '../api/services/patient/PatientQueryService';
 import { UserCommandService } from '../api/services/user/UserCommandService';
 import { UserQueryService } from '../api/services/user/UserQueryService';
+import { UserModel } from '../api/models/UserModel';
+import { AppointmentModel } from '../api/models/AppointmentModel';
+import { DoctorModel } from '../api/models/DoctorModel';
+import { MedicalRecordModel } from '../api/models/MedicalRecordModel';
+import { PatientModel } from '../api/models/PatientModel';
 
 const connection = new IORedis({
     maxRetriesPerRequest: null,
@@ -26,52 +31,52 @@ export const commandWorker = new Worker('commandQueue', async job => {
     console.log(`Processing command job ${job.name} with data ${JSON.stringify(job.data)}`);
     switch (job.name) {
         case 'createUser':
-            await UserCommandService.createUser(job.data);
+            await UserModel.createUser(job.data);
             break;
         case 'updateUser':
-            await UserCommandService.updateUser(job.data.id, job.data);
+            await UserModel.updateUser(job.data.id, job.data);
             break;
         case 'deleteUser':
-            await UserCommandService.deleteUser(job.data.id);
+            await UserModel.deleteUser(job.data.id);
             break;
         case 'loginUser':
             await UserCommandService.loginUser(job.data.email, job.data.password);
             break;
         case 'createAppointment':
-            await AppointmentCommandService.createAppointment(job.data);
+            await AppointmentModel.create(job.data);
             break;
         case 'updateAppointment':
-            await AppointmentCommandService.updateAppointment(job.data.id, job.data);
+            await AppointmentModel.update(job.data.id, job.data);
             break;
         case 'deleteAppointment':
-            await AppointmentCommandService.deleteAppointment(job.data.id);
+            await AppointmentModel.delete(job.data.id);
             break;
         case 'createDoctor':
-            await DoctorCommandService.createDoctor(job.data);
+            await DoctorModel.createDoctor(job.data);
             break;
         case 'updateDoctor':
-            await DoctorCommandService.updateDoctor(job.data.id, job.data);
+            await DoctorModel.updateDoctor(job.data.id, job.data);
             break;
         case 'deleteDoctor':
-            await DoctorCommandService.deleteDoctor(job.data.id);
+            await DoctorModel.deleteDoctor(job.data.id);
             break;
         case 'createMedicalRecord':
-            await MedicalRecordCommandService.createMedicalRecord(job.data);
+            await MedicalRecordModel.create(job.data);
             break;
         case 'updateMedicalRecord':
-            await MedicalRecordCommandService.updateMedicalRecord(job.data.id, job.data);
+            await MedicalRecordModel.update(job.data.id, job.data);
             break;
         case 'deleteMedicalRecord':
-            await MedicalRecordCommandService.deleteMedicalRecord(job.data.id);
+            await MedicalRecordModel.delete(job.data.id);
             break;
         case 'createPatient':
-            await PatientCommandService.createPatient(job.data);
+            await PatientModel.create(job.data);
             break;
         case 'updatePatient':
-            await PatientCommandService.updatePatient(job.data.id, job.data);
+            await PatientModel.update(job.data.id, job.data);
             break;
         case 'deletePatient':
-            await PatientCommandService.deletePatient(job.data.id);
+            await PatientModel.delete(job.data.id);
             break;
         // Add other command handlers here
         default:
@@ -83,49 +88,38 @@ export const queryWorker = new Worker('queryQueue', async job => {
     console.log(`Processing query job ${job.name} with data ${JSON.stringify(job.data)}`);
     switch (job.name) {
         case 'listUsers':
-            const userListResult = await UserQueryService.listUsers();
-            console.log('Returning user list result:', userListResult.data);
-            return userListResult.data;
+            const userListResult = await UserModel.getAllUsers();
+            return userListResult;
         case 'getUser':
-            const userResult = await UserQueryService.findUser(job.data.id);
-            console.log('Returning user result:', userResult.data);
-            return userResult.data;
+            const userResult = await UserModel.getUserById(job.data.id);
+            return userResult;
         case 'listAppointments':
-            const appointmentListResult = await AppointmentQueryService.listAppointments();
-            console.log('Returning appointment list result:', appointmentListResult.data);
-            return appointmentListResult.data;
+            const appointmentListResult = await AppointmentModel.findAll();
+            return appointmentListResult;
         case 'getAppointment':
-            const appointmentResult = await AppointmentQueryService.getAppointment(job.data.id);
-            console.log('Returning appointment result:', appointmentResult.data);
-            return appointmentResult.data;
+            const appointmentResult = await AppointmentModel.findOne(Number(job.id));
+            return appointmentResult;
         case 'listDoctors':
-            const doctorListResult = await DoctorQueryService.listDoctors();
-            console.log('Returning doctor list result:', doctorListResult.data);
-            return doctorListResult.data;
+            const doctorListResult = await DoctorModel.getAllDoctors();
+            return doctorListResult;
         case 'getDoctor':
-            const doctorResult = await DoctorQueryService.findDoctor(job.data.id);
-            console.log('Returning doctor result:', doctorResult.data);
-            return doctorResult.data;
+            const doctorResult = await DoctorModel.getDoctorById(Number(job.id));
+            return doctorResult;
         case 'listMedicalRecords':
-            const medicalRecordListResult = await MedicalRecordQueryService.listMedicalRecords();
-            console.log('Returning medical record list result:', medicalRecordListResult.data);
-            return medicalRecordListResult.data;
+            const medicalRecordListResult = await MedicalRecordModel.findAll();
+            return medicalRecordListResult;
         case 'getMedicalRecord':
-            const medicalRecordResult = await MedicalRecordQueryService.getMedicalRecord(job.data.id);
-            console.log('Returning medical record result:', medicalRecordResult.data);
-            return medicalRecordResult.data;
+            const medicalRecordResult = await MedicalRecordModel.findOne(Number(job.id));
+            return medicalRecordResult;
         case 'generateAtestado':
-            const atestadoResult = await MedicalRecordQueryService.generateAtestado(job.data.id);
-            console.log('Returning atestado result:', atestadoResult.data);
-            return atestadoResult.data;
+            const atestadoResult = await MedicalRecordModel.generateAtestado(Number(job.id));
+            return atestadoResult;
         case 'listPatients':
-            const patientListResult = await PatientQueryService.listPatients();
-            console.log('Returning patient list result:', patientListResult.data);
-            return patientListResult.data;
+            const patientListResult = await PatientModel.findAll();
+            return patientListResult;
         case 'getPatient':
-            const patientResult = await PatientQueryService.getPatient(job.data.id);
-            console.log('Returning patient result:', patientResult.data);
-            return patientResult.data;
+            const patientResult = await PatientModel.findOne(Number(job.id));
+            return patientResult;
         // Add other query handlers here
         default:
             console.log(`Unknown query job: ${job.name}`);

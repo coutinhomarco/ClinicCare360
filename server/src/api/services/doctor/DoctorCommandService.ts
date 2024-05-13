@@ -7,11 +7,13 @@ import { DoctorData } from '../../utils/interfaces/doctor/doctorValidation';
 export class DoctorCommandService {
     static async createDoctor(doctorData: any): Promise<ServiceResponse<any>> {
         const { status, message } = await isValidDoctorData(doctorData);
+        
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('createDoctor', doctorData);
-        return { status: 201, message: 'Doctor created successfully' };
+        const jobId = `createDoctor-${doctorData.email}`;
+        await commandQueue.add('createDoctor', doctorData, { jobId });
+        return { status: 201, message: 'Doctor creation job added to queue' };
     }
 
     static async updateDoctor(id: number, doctorData: Partial<DoctorData>): Promise<ServiceResponse<any>> {
@@ -19,8 +21,9 @@ export class DoctorCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('updateDoctor', { id, ...doctorData });
-        return { status: 200, message: 'Doctor updated successfully' };
+        const jobId = `updateDoctor-${id}`;
+        await commandQueue.add('updateDoctor', { id, ...doctorData }, { jobId });
+        return { status: 200, message: 'Doctor update job added to queue' };
     }
 
     static async deleteDoctor(id: number): Promise<ServiceResponse<void>> {
@@ -28,7 +31,8 @@ export class DoctorCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('deleteDoctor', { id });
-        return { status: 204, message: 'Doctor deleted successfully' };
+        const jobId = `deleteDoctor-${id}`;
+        await commandQueue.add('deleteDoctor', { id }, { jobId });
+        return { status: 204, message: 'Doctor deletion job added to queue' };
     }
 }

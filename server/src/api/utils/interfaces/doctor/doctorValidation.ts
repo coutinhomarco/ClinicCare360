@@ -10,4 +10,6 @@ export interface DoctorUpdateData {
     specialization?: string | undefined;
     availability?: string | undefined;
     userId?: number | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
 }

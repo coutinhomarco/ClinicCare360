@@ -2,7 +2,7 @@ export interface MedicalRecord {
     diagnosis: {
         hospitalInfo: {
             name: string;
-            adressLine: string;
+            addressLine: string;
             city: string;
         };
         description: string;

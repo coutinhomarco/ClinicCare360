@@ -38,7 +38,7 @@ git clone git@github.com:coutinhomarco/ClinicCare360.git
 To set up the frontend, run:
 
 ```bash
-cd CliniCare/client
+cd CliniCare360/client
 npm install
 npm start
 ```
@@ -46,19 +46,35 @@ npm start
 To set up the backend, run:
 
 ```bash
-cd CliniCare/server
+cd CliniCare360/server
 npm install
 npm run dev
 ```
 
+### Environment Variables
+
+Ensure you have the necessary environment variables set up. You can create a `.env` file in the `server` directory with the following content as an example:
+
+```env
+PORT=3000
+DATABASE_URL=your_database_url
+JWT_SECRET=your_jwt_secret
+REDIS_HOST=your_redis_host
+REDIS_PORT=your_redis_port
+```
+
 ## System Architecture
 
-CliniCare360 uses a Command Query Responsibility Segregation (CQRS) architecture to separate read and write operations, enhancing performance and scalability. This approach is implemented through separate controllers and services for handling commands (create, update, delete) and queries (retrieve).
+CliniCare360 uses a Command Query Responsibility Segregation (CQRS) architecture to separate read and write operations, enhancing performance and scalability. This approach is implemented through separate controllers and services for handling commands (create, update, delete) and queries (retrieve). BullMQ is used to manage the command and query queues efficiently.
 
 ### Backend Structure
 
-- **Command Controllers and Services**: Handle creation, updates, and deletion of records.
-- **Query Controllers and Services**: Handle retrieval of records ensuring fast and efficient data access.
+- **Command Controllers and Services**: Handle creation, updates, and deletion of records using BullMQ for queue management.
+- **Query Controllers and Services**: Handle retrieval of records ensuring fast and efficient data access using BullMQ for queue management.
+
+### BullMQ Integration
+
+BullMQ is integrated to handle asynchronous processing of commands and queries, improving the scalability and reliability of the system. Workers are set up to process the queues for various operations like creating, updating, and deleting records.
 
 ## Database Schema
 
@@ -71,6 +87,7 @@ The following diagram shows the database structure for CliniCare:
 - [React](https://reactjs.org/) - The web framework used for the frontend.
 - [Node.js](https://nodejs.org/) - The backend framework.
 - [PostgreSQL](https://www.postgresql.org/) - Database system.
+- [BullMQ](https://docs.bullmq.io/) - Job queue used for handling command and query processing.
 
 ## Contributing
 

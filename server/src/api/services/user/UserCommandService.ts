@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 
-const secret: string = process.env.JWT_SECRET || 'very_secret_key_here';  // Ensure this is secure
+const secret: string = process.env.JWT_SECRET || 'very_secret_key_here';
 
 export class UserCommandService {
     static async createUser(userData: UserData): Promise<ServiceResponse<UserData>> {

@@ -4,7 +4,7 @@ import doctorRoutes from './api/routes/doctor/DoctorRoutes';
 import patientRoutes from './api/routes/patient/PatientRoutes';
 import appointmentRoutes from './api/routes/appointment/AppointmentRoutes';
 import medicalRecordsRoutes from './api/routes/medicalRecord/MedicalRecordRoutes';
-import './config/bullmq'; // Ensure workers are started
+import './config/bullmq';
 
 const app = express();
 

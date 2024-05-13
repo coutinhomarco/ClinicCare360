@@ -5,32 +5,20 @@ import { isValidMedicalRecordDelete, isValidMedicalRecordData, isValidMedicalRec
 export class MedicalRecordCommandController {
     static async createMedicalRecord(req: Request, res: Response) {
         const medicalRecordData = req.body;
-        const { status, message } = await isValidMedicalRecordData(medicalRecordData);
-        if (status !== 200) {
-            return res.status(status).json({ message });
-        }
-        const {status: statusFinal, message: messageFinal} = await MedicalRecordCommandService.createMedicalRecord(medicalRecordData);
-        return res.status(statusFinal).json({ message: messageFinal});
+        const result = await MedicalRecordCommandService.createMedicalRecord(medicalRecordData);
+        return res.status(result.status).json({ message: result.message });
     }
 
     static async updateMedicalRecord(req: Request, res: Response) {
         const id = parseInt(req.params.id);
         const medicalRecordData = req.body;
-        const { status, message } = await isValidMedicalRecordUpdateData(medicalRecordData);
-        if (status !== 200) {
-            return res.status(status).json({ message });
-        }
-        const {status: statusFinal, message: messageFinal} = await MedicalRecordCommandService.updateMedicalRecord(id, medicalRecordData);
-        return res.status(statusFinal).json({message: messageFinal});
+        const result = await MedicalRecordCommandService.updateMedicalRecord(id, medicalRecordData);
+        return res.status(result.status).json({ message: result.message });
     }
 
     static async deleteMedicalRecord(req: Request, res: Response) {
-        const { id } = req.params;
-        const { status, message } = await isValidMedicalRecordDelete(Number(id));
-        if (status !== 200) {
-            return res.status(status).json({ message });
-        }
-        const {status: statusFinal, message: messageFinal} = await MedicalRecordCommandService.deleteMedicalRecord(Number(id));
-        return res.status(statusFinal).json({ message: messageFinal});
+        const id = parseInt(req.params.id);
+        const result = await MedicalRecordCommandService.deleteMedicalRecord(id);
+        return res.status(result.status).json({ message: result.message });
     }
 }

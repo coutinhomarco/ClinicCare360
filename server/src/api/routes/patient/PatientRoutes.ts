@@ -6,12 +6,12 @@ import { authenticateToken } from '../../utils/middleware/auth';
 const router = express.Router();
 
 // Query endpoints
-router.get('/',authenticateToken , PatientQueryController.listPatients);
-router.get('/:id',authenticateToken , PatientQueryController.getPatient);
+router.get('/', authenticateToken, PatientQueryController.listPatients);
+router.get('/:id', authenticateToken, PatientQueryController.getPatient);
 
 // Command endpoints
-router.post('/',authenticateToken, PatientCommandController.createPatient);
-router.put('/:id',authenticateToken , PatientCommandController.updatePatient);
-router.delete('/:id',authenticateToken , PatientCommandController.deletePatient);
+router.post('/', authenticateToken, PatientCommandController.createPatient);
+router.put('/:id', authenticateToken, PatientCommandController.updatePatient);
+router.delete('/:id', authenticateToken, PatientCommandController.deletePatient);
 
 export default router;

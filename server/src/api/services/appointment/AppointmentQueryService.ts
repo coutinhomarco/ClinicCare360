@@ -1,4 +1,3 @@
-// src/services/appointment/AppointmentQueryService.ts
 import { queryQueue, queryQueueEvents } from '../../../config/bullmq';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 import { AppointmentModel } from '../../models/AppointmentModel';

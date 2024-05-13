@@ -10,29 +10,20 @@ export class PatientCommandController {
             return res.status(status).json({ message });
         }
         const patientToDb = {...patientData, dob: new Date(patientData.dob)}        
-        const {status: statusFinal, message: messageFinal} = await PatientCommandService.createPatient(patientToDb);
-        return res.status(statusFinal).json({ message: messageFinal});
-
+        const result = await PatientCommandService.createPatient(patientToDb);
+        return res.status(result.status).json({ message: result.message });
     }
 
     static async updatePatient(req: Request, res: Response) {
         const id = parseInt(req.params.id);
         const patientData = req.body;
-        const { status, message } = await isValidPatientUpdateData(id, patientData);
-        if (status !== 200) {
-            return res.status(status).json({ message });
-        }  
-        const {status: statusFinal, message: messageFinal} = await PatientCommandService.updatePatient(id, patientData);
-        return res.status(statusFinal).json({ message: messageFinal });
+        const result = await PatientCommandService.updatePatient(id, patientData);
+        return res.status(result.status).json({ message: result.message });
     }
 
     static async deletePatient(req: Request, res: Response) {
-        const { id } = req.params;
-        const { status, message } = await isValidPatientDelete(Number(id));
-        if (status !== 200) {
-            return res.status(status).json({ message });
-        }
-        const {status: statusFinal, message: messageFinal} = await PatientCommandService.deletePatient(Number(id));
-        res.status(statusFinal).json({ message: messageFinal });
+        const id = parseInt(req.params.id);
+        const result = await PatientCommandService.deletePatient(id);
+        res.status(result.status).json({ message: result.message });
     }
 }

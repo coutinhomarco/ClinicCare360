@@ -37,6 +37,8 @@ model Doctor {
   id             Int             @id @default(autoincrement())
   userId         Int
   user           User            @relation(fields: [userId], references: [id])
+  firstName    String
+  lastName     String
   specialization String
   availability   String // JSON representing the schedule
   appointments   Appointment[]

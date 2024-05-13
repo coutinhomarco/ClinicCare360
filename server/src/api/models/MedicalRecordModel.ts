@@ -16,8 +16,8 @@ export class MedicalRecordModel {
         return await prisma.medicalRecord.findUnique({
             where: { id },
             include: {
-                patient: true,
-                doctor: true
+                doctor: true,
+                patient: true
             }
         });
     }
@@ -27,7 +27,7 @@ export class MedicalRecordModel {
         doctorId: number,
         dateOfVisit: Date,
         diagnosis: string,
-        treatment: string
+        treatment: string,
     }) {
         return await prisma.medicalRecord.create({
             data: medicalRecordData
@@ -39,7 +39,7 @@ export class MedicalRecordModel {
         doctorId?: number,
         dateOfVisit?: Date,
         diagnosis?: string,
-        treatment?: string
+        treatment?: string,
     }) {
         return await prisma.medicalRecord.update({
             where: { id },

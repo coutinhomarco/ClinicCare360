@@ -8,6 +8,7 @@ const router = express.Router();
 // Query endpoints
 router.get('/',authenticateToken , MedicalRecordQueryController.listMedicalRecords);
 router.get('/:id',authenticateToken , MedicalRecordQueryController.getMedicalRecord);
+router.get('/medicalRecords/:id/atestado', MedicalRecordQueryController.generateAtestado);
 
 // Command endpoints
 router.post('/',authenticateToken , MedicalRecordCommandController.createMedicalRecord);

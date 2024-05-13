@@ -1,24 +1,25 @@
-import { queryQueue, queryQueueEvents } from '../../../config/bullmq';
+import { queryQueue } from '../../../config/bullmq';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 import { UserModel } from '../../models/UserModel';
 import { UserData } from '../../utils/validations/userValidation';
 
 export class UserQueryService {
     static async listUsers(): Promise<ServiceResponse<UserData[]>> {
-        const job = await queryQueue.add('listUsers', {});
-        const result = await job.waitUntilFinished(queryQueueEvents);
-        return { status: 200, data: result };
+        console.log('listUsers service called');
+        const users = await UserModel.getAllUsers(); // Fetch users directly
+        console.log('Fetched users:', users);
+        return { status: 200, data: users };
     }
 
     static async findUser(id: number): Promise<ServiceResponse<UserData>> {
         if (!id) {
             return { status: 400, message: 'Invalid user ID' };
         }
-        const job = await queryQueue.add('getUser', { id });
-        const result = await job.waitUntilFinished(queryQueueEvents);
-        if (!result) {
+        console.log(`findUser service called with id ${id}`);
+        const user = await UserModel.getUserById(id);
+        if (!user) {
             return { status: 404, message: 'User not found' };
         }
-        return { status: 200, data: result };
+        return { status: 200, data: user };
     }
 }

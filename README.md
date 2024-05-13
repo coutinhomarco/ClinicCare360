@@ -85,6 +85,7 @@ The following diagram shows the database structure for CliniCare360:
 ## Request flow
 
 The following diagram shows how the requests are handled for CliniCare360
+
 ![Request Flow](docs/flow.png)
 
 

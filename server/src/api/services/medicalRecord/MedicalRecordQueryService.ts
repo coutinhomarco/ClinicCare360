@@ -1,32 +1,38 @@
-import { queryQueue, queryQueueEvents } from '../../../config/bullmq';
+// src/api/services/medicalRecord/MedicalRecordQueryService.ts
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 import { MedicalRecordModel } from '../../models/MedicalRecordModel';
 import puppeteer from 'puppeteer';
-import { createAtestado } from '../../utils/functions/createAtestado';
+import { createAtestado } from '../../utils/functions/createAtestado';  // Adjust this import based on your actual file structure
 
 export class MedicalRecordQueryService {
     static async listMedicalRecords(): Promise<ServiceResponse<any[]>> {
-        const job = await queryQueue.add('listMedicalRecords', {});
-        const result = await job.waitUntilFinished(queryQueueEvents);
-        return { status: 200, data: result };
+        try {
+            const medicalRecords = await MedicalRecordModel.findAll();
+            return { status: 200, data: medicalRecords };
+        } catch (error) {
+            return { status: 500, message: 'Failed to retrieve medical records' };
+        }
     }
 
     static async getMedicalRecord(id: number): Promise<ServiceResponse<any>> {
         if (!id) {
             return { status: 400, message: 'Invalid medical record ID' };
         }
-        const job = await queryQueue.add('getMedicalRecord', { id });
-        const result = await job.waitUntilFinished(queryQueueEvents);
-        if (!result) {
-            return { status: 404, message: 'Medical record not found' };
+        try {
+            const medicalRecord = await MedicalRecordModel.findOne(id);
+            if (!medicalRecord) {
+                return { status: 404, message: 'Medical record not found' };
+            }
+            return { status: 200, data: medicalRecord };
+        } catch (error) {
+            return { status: 500, message: 'Error finding medical record' };
         }
-        return { status: 200, data: result };
     }
 
-    static async generateAtestado(id: number): Promise<ServiceResponse<any>> {
+    static async generateAtestado(id: number): Promise<ServiceResponse<Buffer>> {
         const response = await this.getMedicalRecord(id);
         if (response.status !== 200) {
-            return response;
+            return response;  // Return error response directly
         }
 
         const record = response.data;

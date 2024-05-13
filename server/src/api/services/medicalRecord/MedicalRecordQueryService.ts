@@ -1,6 +1,6 @@
 import { MedicalRecordModel } from '../../models/MedicalRecordModel';
 import puppeteer from 'puppeteer';
-import { createAtestado } from '../../utils/functions/createAtestado';  // Ajust this import based on your actual file structure
+import { createAtestado } from '../../utils/functions/createAtestado';
 
 export class MedicalRecordQueryService {
     static async listMedicalRecords() {
@@ -32,7 +32,7 @@ export class MedicalRecordQueryService {
     static async generateAtestado(id: number) {
         const response = await this.getMedicalRecord(id);
         if (response.status !== 200) {
-            return response;  // Return error response directly
+            return response;
         }
 
         const record = response.data;

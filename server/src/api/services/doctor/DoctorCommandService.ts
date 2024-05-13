@@ -1,9 +1,8 @@
-import { DoctorModel } from '../../models/DoctorModel';
-import { isValidDoctorData, isValidDoctorUpdateData, isValidDoctorDelete } from '../../utils/validations/doctorValidation';
-import {DoctorData} from '../../utils/interfaces/doctor/doctorValidation';
-
+import { commandQueue } from '../../../config/bullmq';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
-
+import { isValidDoctorData, isValidDoctorUpdateData, isValidDoctorDelete } from '../../utils/validations/doctorValidation';
+import { DoctorModel } from '../../models/DoctorModel';
+import { DoctorData } from '../../utils/interfaces/doctor/doctorValidation';
 
 export class DoctorCommandService {
     static async createDoctor(doctorData: any): Promise<ServiceResponse<any>> {
@@ -11,8 +10,8 @@ export class DoctorCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await DoctorModel.createDoctor(doctorData);
-        return { status , message: 'Doctor created successfully'};
+        await commandQueue.add('createDoctor', doctorData);
+        return { status: 201, message: 'Doctor created successfully' };
     }
 
     static async updateDoctor(id: number, doctorData: Partial<DoctorData>): Promise<ServiceResponse<any>> {
@@ -20,8 +19,8 @@ export class DoctorCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await DoctorModel.updateDoctor(id, doctorData);
-        return { status: 200, message: 'Doctor updated'};
+        await commandQueue.add('updateDoctor', { id, ...doctorData });
+        return { status: 200, message: 'Doctor updated successfully' };
     }
 
     static async deleteDoctor(id: number): Promise<ServiceResponse<void>> {
@@ -29,7 +28,7 @@ export class DoctorCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await DoctorModel.deleteDoctor(id);
-        return { status: 204, message: 'Doctor deleted successfully'};
+        await commandQueue.add('deleteDoctor', { id });
+        return { status: 204, message: 'Doctor deleted successfully' };
     }
 }

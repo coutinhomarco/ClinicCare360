@@ -3,6 +3,8 @@ import { Queue, Worker, QueueEvents } from 'bullmq';
 import IORedis from 'ioredis';
 import { AppointmentCommandService } from '../api/services/appointment/AppointmentCommandService';
 import { AppointmentQueryService } from '../api/services/appointment/AppointmentQueryService';
+import { DoctorCommandService } from '../api/services/doctor/DoctorCommandService';
+import { DoctorQueryService } from '../api/services/doctor/DoctorQueryService';
 
 const connection = new IORedis();
 
@@ -23,6 +25,15 @@ export const commandWorker = new Worker('commandQueue', async job => {
         case 'deleteAppointment':
             await AppointmentCommandService.deleteAppointment(job.data.id);
             break;
+        case 'createDoctor':
+            await DoctorCommandService.createDoctor(job.data);
+            break;
+        case 'updateDoctor':
+            await DoctorCommandService.updateDoctor(job.data.id, job.data);
+            break;
+        case 'deleteDoctor':
+            await DoctorCommandService.deleteDoctor(job.data.id);
+            break;
         // Add other command handlers here
     }
 }, { connection });
@@ -33,6 +44,10 @@ export const queryWorker = new Worker('queryQueue', async job => {
             return await AppointmentQueryService.listAppointments();
         case 'getAppointment':
             return await AppointmentQueryService.getAppointment(job.data.id);
+        case 'listDoctors':
+            return await DoctorQueryService.listDoctors();
+        case 'getDoctor':
+            return await DoctorQueryService.findDoctor(job.data.id);
         // Add other query handlers here
     }
 }, { connection });

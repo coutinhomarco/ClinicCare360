@@ -1,4 +1,3 @@
-// src/config/bullmq.ts
 import { Queue, Worker, QueueEvents } from 'bullmq';
 import IORedis from 'ioredis';
 import { AppointmentCommandService } from '../api/services/appointment/AppointmentCommandService';
@@ -6,7 +5,9 @@ import { AppointmentQueryService } from '../api/services/appointment/Appointment
 import { DoctorCommandService } from '../api/services/doctor/DoctorCommandService';
 import { DoctorQueryService } from '../api/services/doctor/DoctorQueryService';
 
-const connection = new IORedis();
+const connection = new IORedis({
+    maxRetriesPerRequest: null
+});
 
 export const commandQueue = new Queue('commandQueue', { connection });
 export const queryQueue = new Queue('queryQueue', { connection });

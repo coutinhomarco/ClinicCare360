@@ -11,10 +11,10 @@ const secret: string = process.env.JWT_SECRET || 'very_secret_key_here';
 
 export class UserCommandService {
     static async createUser(userData: UserData): Promise<ServiceResponse<UserData>> {
-        if (!isValidUserData(userData)) {
-            return { status: 400, message: 'Invalid user data' };
-        }
         try {
+            if (!isValidUserData(userData)) {
+                return { status: 400, message: 'Invalid user data' };
+            }
             const user = await UserModel.findUserByEmail(userData.email);
             if (user) {
                 return { status: 500, message: 'This email is already being used.' };
@@ -30,10 +30,10 @@ export class UserCommandService {
     }
 
     static async updateUser(id: number, userData: Partial<UserData>): Promise<ServiceResponse<UserData>> {
-        if (Object.keys(userData).some(key => userData[key as keyof UserData] === undefined)) {
-            return { status: 400, message: 'Invalid data provided' };
-        }
         try {
+            if (Object.keys(userData).some(key => userData[key as keyof UserData] === undefined)) {
+                return { status: 400, message: 'Invalid data provided' };
+            }
             const user = await UserModel.getUserById(id);
             if (!user) {
                 return { status: 500, message: "This account doesn't exist." };
@@ -59,7 +59,7 @@ export class UserCommandService {
             
             const job = await commandQueue.add('deleteUser', { id }, { jobId });
             
-            const completed = await job.waitUntilFinished(commandQueueEvents);
+            await job.waitUntilFinished(commandQueueEvents);
             
             return { status: 202, message: 'User deletion job added to queue' };
         } catch (error) {

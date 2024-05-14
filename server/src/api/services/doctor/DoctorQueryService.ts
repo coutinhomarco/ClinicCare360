@@ -13,10 +13,10 @@ export class DoctorQueryService {
     }
 
     static async findDoctor(id: number): Promise<ServiceResponse<any>> {
-        if (!id) {
-            return { status: 400, message: 'Invalid doctor ID' };
-        }
         try {
+            if (!id) {
+                return { status: 400, message: 'Invalid doctor ID' };
+            }
             const doctor = await DoctorModel.getDoctorById(id);
             if (!doctor) {
                 return { status: 404, message: 'Doctor not found' };

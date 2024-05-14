@@ -10,7 +10,7 @@ export class PatientCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        const jobId = `createPatient-${patientData.email}`;
+        const jobId = `createPatient-${patientData.userId}`;
         await commandQueue.add('createPatient', patientData, { jobId });
         return { status: 201, message: 'Patient creation job added to queue' };
     }

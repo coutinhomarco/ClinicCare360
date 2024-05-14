@@ -11,7 +11,7 @@ export class DoctorCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        const jobId = `createDoctor-${doctorData.email}`;
+        const jobId = `createDoctor-${doctorData.userId}`;
         await commandQueue.add('createDoctor', doctorData, { jobId });
         return { status: 201, message: 'Doctor creation job added to queue' };
     }

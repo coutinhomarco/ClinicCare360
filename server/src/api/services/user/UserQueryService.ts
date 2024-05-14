@@ -5,9 +5,7 @@ import { UserData } from '../../utils/validations/userValidation';
 
 export class UserQueryService {
     static async listUsers(): Promise<ServiceResponse<UserData[]>> {
-        console.log('listUsers service called');
         const users = await UserModel.getAllUsers(); // Fetch users directly
-        console.log('Fetched users:', users);
         return { status: 200, data: users };
     }
 
@@ -15,7 +13,6 @@ export class UserQueryService {
         if (!id) {
             return { status: 400, message: 'Invalid user ID' };
         }
-        console.log(`findUser service called with id ${id}`);
         const user = await UserModel.getUserById(id);
         if (!user) {
             return { status: 404, message: 'User not found' };

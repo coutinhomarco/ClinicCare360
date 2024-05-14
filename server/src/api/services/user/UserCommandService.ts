@@ -1,9 +1,11 @@
-import { commandQueue } from '../../../config/bullmq';
+import { commandQueue, commandQueueEvents } from '../../../config/bullmq';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 import { UserModel } from '../../models/UserModel';
 import { UserData, isValidUserData } from '../../utils/validations/userValidation';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { DoctorModel } from '../../models/DoctorModel';
+import { MedicalRecordModel } from '../../models/MedicalRecordModel';
 
 const secret: string = process.env.JWT_SECRET || 'very_secret_key_here';
 
@@ -54,12 +56,18 @@ export class UserCommandService {
                 return { status: 500, message: 'This account doesn\'t exist.' };
             }
             const jobId = `deleteUser-${id}`;
-            await commandQueue.add('deleteUser', { id }, { jobId });
+            
+            const job = await commandQueue.add('deleteUser', { id }, { jobId });
+            
+            const completed = await job.waitUntilFinished(commandQueueEvents);
+            
             return { status: 202, message: 'User deletion job added to queue' };
         } catch (error) {
+            console.error('Error deleting user:', error);
             return { status: 500, message: 'Error deleting user' };
         }
     }
+    
 
     static async loginUser(email: string, password: string): Promise<ServiceResponse<{ token: string }>> {
         try {

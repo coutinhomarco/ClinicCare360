@@ -19,61 +19,68 @@ export const commandQueueEvents = new QueueEvents('commandQueue', { connection }
 export const queryQueueEvents = new QueueEvents('queryQueue', { connection });
 
 export const commandWorker = new Worker('commandQueue', async job => {
-    console.log(`Processing command job ${job.name} with data ${JSON.stringify(job.data)}`);
-    switch (job.name) {
-        case 'createUser':
-            await UserModel.createUser(job.data);
-            break;
-        case 'updateUser':
-            await UserModel.updateUser(job.data.id, job.data);
-            break;
-        case 'deleteUser':
-            await UserModel.deleteUser(job.data.id);
-            break;
-        case 'loginUser':
-            await UserCommandService.loginUser(job.data.email, job.data.password);
-            break;
-        case 'createAppointment':
-            await AppointmentModel.create(job.data);
-            break;
-        case 'updateAppointment':
-            await AppointmentModel.update(job.data.id, job.data);
-            break;
-        case 'deleteAppointment':
-            await AppointmentModel.delete(job.data.id);
-            break;
-        case 'createDoctor':
-            await DoctorModel.createDoctor(job.data);
-            break;
-        case 'updateDoctor':
-            await DoctorModel.updateDoctor(job.data.id, job.data);
-            break;
-        case 'deleteDoctor':
-            await DoctorModel.deleteDoctor(job.data.id);
-            break;
-        case 'createMedicalRecord':
-            await MedicalRecordModel.create(job.data);
-            break;
-        case 'updateMedicalRecord':
-            await MedicalRecordModel.update(job.data.id, job.data);
-            break;
-        case 'deleteMedicalRecord':
-            await MedicalRecordModel.delete(job.data.id);
-            break;
-        case 'createPatient':
-            await PatientModel.create(job.data);
-            break;
-        case 'updatePatient':
-            await PatientModel.update(job.data.id, job.data);
-            break;
-        case 'deletePatient':
-            await PatientModel.delete(job.data.id);
-            break;
-        // Add other command handlers here
-        default:
-            console.log(`Unknown command job: ${job.name}`);
+    try {
+        console.log(`Processing command job ${job.name} with data ${JSON.stringify(job.data)}`);
+        switch (job.name) {
+            case 'createUser':
+                await UserModel.createUser(job.data);
+                break;
+            case 'updateUser':
+                await UserModel.updateUser(job.data.id, job.data);
+                break;
+            case 'deleteUser':
+                await UserModel.deleteUser(job.data.id);
+                break;
+            case 'loginUser':
+                await UserCommandService.loginUser(job.data.email, job.data.password);
+                break;
+            case 'createAppointment':
+                await AppointmentModel.create(job.data);
+                break;
+            case 'updateAppointment':
+                await AppointmentModel.update(job.data.id, job.data);
+                break;
+            case 'deleteAppointment':
+                await AppointmentModel.delete(job.data.id);
+                break;
+            case 'createDoctor':
+                await DoctorModel.createDoctor(job.data);
+                break;
+            case 'updateDoctor':
+                await DoctorModel.updateDoctor(job.data.id, job.data);
+                break;
+            case 'deleteDoctor':
+                await DoctorModel.deleteDoctor(job.data.id);
+                break;
+            case 'createMedicalRecord':
+                await MedicalRecordModel.create(job.data);
+                break;
+            case 'updateMedicalRecord':
+                await MedicalRecordModel.update(job.data.id, job.data);
+                break;
+            case 'deleteMedicalRecord':
+                await MedicalRecordModel.delete(job.data.id);
+                break;
+            case 'createPatient':
+                await PatientModel.create(job.data);
+                break;
+            case 'updatePatient':
+                await PatientModel.update(job.data.id, job.data);
+                break;
+            case 'deletePatient':
+                await PatientModel.delete(job.data.id);
+                break;
+            // Add other command handlers here
+            default:
+                console.log(`Unknown command job: ${job.name}`);
+        }
+        console.log(`Command job ${job.name} processed successfully`);
+    } catch (error) {
+        console.error(`Error processing command job ${job.name}:`, error);
     }
 }, { connection });
+
+
 
 export const queryWorker = new Worker('queryQueue', async job => {
     console.log(`Processing query job ${job.name} with data ${JSON.stringify(job.data)}`);

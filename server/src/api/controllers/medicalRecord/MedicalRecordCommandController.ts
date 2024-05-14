@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { MedicalRecordCommandService } from '../../services/medicalRecord/MedicalRecordCommandService';
-import { isValidMedicalRecordDelete, isValidMedicalRecordData, isValidMedicalRecordUpdateData } from '../../utils/validations/medicalRecordValidation';
 
 export class MedicalRecordCommandController {
     static async createMedicalRecord(req: Request, res: Response) {

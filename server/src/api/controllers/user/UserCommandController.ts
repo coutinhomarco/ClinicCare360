@@ -1,7 +1,13 @@
 import { Request, Response } from 'express';
 import { UserCommandService } from '../../services/user/UserCommandService';
-import { isValidUserData, isValidUserDataForUpdate, isValidUserDelete } from '../../utils/validations/userValidation';
+interface UserPayload {
+    userId: number;
+    role: string;
+}
 
+interface RequestWithUser extends Request {
+    user?: UserPayload;
+}
 export class UserCommandController {
     static async createUser(req: Request, res: Response) {
         const userData = req.body;
@@ -16,7 +22,14 @@ export class UserCommandController {
         res.status(result.status).json({ message: result.message });
     }
 
-    static async deleteUser(req: Request, res: Response) {
+    static async deleteUser(req: RequestWithUser , res: Response) {
+        const role = req?.user?.role
+        if (role !== 'admin') {
+            res.status(401).json({ message: 'Unauthorized' });
+            return;
+        }
+        console.log('Deleting user with id:', req.params.id);
+        
         const id = parseInt(req.params.id);
         const result = await UserCommandService.deleteUser(id);
         res.status(result.status).json({ message: result.message });

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { DoctorCommandService } from '../../services/doctor/DoctorCommandService';
-import { isValidDoctorData, isValidDoctorUpdateData, isValidDoctorDelete } from '../../utils/validations/doctorValidation';
 
 export class DoctorCommandController {
     static async createDoctor(req: Request, res: Response) {

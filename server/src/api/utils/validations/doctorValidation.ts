@@ -12,7 +12,7 @@ function isFieldMissing(data: any, fields: string[]): string | null {
 }
 
 export async function isValidDoctorData(data: DoctorData): Promise<{ status: number, message: string | undefined }> {
-    let message = isFieldMissing(data, ['userId', 'specialization', 'availability', 'firstName', 'lastName']);
+    const message = isFieldMissing(data, ['userId', 'specialization', 'availability', 'firstName', 'lastName']);
     if (message) return { status: 400, message };
     
     const doctor = await DoctorModel.getDoctorById(data.userId);
@@ -22,7 +22,7 @@ export async function isValidDoctorData(data: DoctorData): Promise<{ status: num
 }
 
 export async function isValidDoctorUpdateData(data: DoctorUpdateData): Promise<{ status: number, message: string | undefined }> {
-    let message = isFieldMissing(data, ['specialization', 'availability']);
+    const message = isFieldMissing(data, ['specialization', 'availability']);
     if (message) return { status: 400, message };
     return { status: 200, message: undefined };
 }

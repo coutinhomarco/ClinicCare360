@@ -11,13 +11,13 @@ function isFieldMissing(data: any, fields: string[]): string | null {
 }
 
 export async function isValidAppointmentData(data: AppointmentUpdateData): Promise<{ status: number, message: string | undefined }> {
-    let message = isFieldMissing(data, ['patientId', 'doctorId', 'appointmentDate', 'startTime', 'endTime', 'status']);
+    const message = isFieldMissing(data, ['patientId', 'doctorId', 'appointmentDate', 'startTime', 'endTime', 'status']);
     if (message) return { status: 400, message };
     return { status: 200, message: undefined };
 }
 
 export async function isValidAppointmentUpdateData(data: AppointmentUpdateData): Promise<{ status: number, message: string | undefined }> {
-    let message = isFieldMissing(data, ['appointmentDate', 'startTime', 'endTime', 'status']);
+    const message = isFieldMissing(data, ['appointmentDate', 'startTime', 'endTime', 'status']);
     if (message) return { status: 400, message };
     return { status: 200, message: undefined };
 }

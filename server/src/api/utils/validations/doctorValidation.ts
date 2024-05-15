@@ -12,6 +12,8 @@ function isFieldMissing(data: any, fields: string[]): string | null {
 }
 
 export async function isValidDoctorData(data: DoctorData): Promise<{ status: number, message: string | undefined }> {
+    console.log('Validating doctor data:', data);
+    
     const message = isFieldMissing(data, ['userId', 'specialization', 'availability', 'firstName', 'lastName']);
     if (message) return { status: 400, message };
     

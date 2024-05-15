@@ -1,29 +1,23 @@
-// src/api/services/doctor/DoctorQueryService.ts
+import { queryQueue, queryQueueEvents } from '../../../config/bullmq';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 import { DoctorModel } from '../../models/DoctorModel';
 
 export class DoctorQueryService {
     static async listDoctors(): Promise<ServiceResponse<any[]>> {
-        try {
-            const doctors = await DoctorModel.getAllDoctors();
-            return { status: 200, data: doctors };
-        } catch (error) {
-            return { status: 500, message: 'Failed to retrieve doctors' };
-        }
+        const job = await queryQueue.add('listDoctors', {});
+        const result = await job.waitUntilFinished(queryQueueEvents);
+        return { status: 200, data: result };
     }
 
     static async findDoctor(id: number): Promise<ServiceResponse<any>> {
-        try {
-            if (!id) {
-                return { status: 400, message: 'Invalid doctor ID' };
-            }
-            const doctor = await DoctorModel.getDoctorById(id);
-            if (!doctor) {
-                return { status: 404, message: 'Doctor not found' };
-            }
-            return { status: 200, data: doctor };
-        } catch (error) {
-            return { status: 500, message: 'Error finding doctor' };
+        if (!id) {
+            return { status: 400, message: 'Invalid doctor ID' };
         }
+        const job = await queryQueue.add('getDoctor', { id });
+        const result = await job.waitUntilFinished(queryQueueEvents);
+        if (!result) {
+            return { status: 404, message: 'Doctor not found' };
+        }
+        return { status: 200, data: result };
     }
 }

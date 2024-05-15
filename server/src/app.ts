@@ -5,7 +5,7 @@ import patientRoutes from './api/routes/patient/PatientRoutes';
 import appointmentRoutes from './api/routes/appointment/AppointmentRoutes';
 import medicalRecordsRoutes from './api/routes/medicalRecord/MedicalRecordRoutes';
 
-import './config/bullmq';
+// import './config/bullmq';
 
 import { rateLimit } from 'express-rate-limit'
 

@@ -1,4 +1,4 @@
-import { commandQueue } from '../../../config/bullmq';
+import { commandQueue, commandQueueEvents } from '../../../config/bullmq';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 import { isValidMedicalRecordData, isValidMedicalRecordUpdateData, isValidMedicalRecordDelete } from '../../utils/validations/medicalRecordValidation';
 import { MedicalRecordModel } from '../../models/MedicalRecordModel';
@@ -11,28 +11,26 @@ export class MedicalRecordCommandService {
             if (status !== 200) {
                 return { status, message };
             }
-            const jobId = `createMedicalRecord-${medicalRecordData.patientId}-${medicalRecordData.dateOfVisit}`;
-            await commandQueue.add('createMedicalRecord', medicalRecordData, { jobId });
-            return { status: 201, message: 'Medical record creation job added to queue' };
+            await commandQueue.add('createMedicalRecord', medicalRecordData);
+            return { status: 201, message: 'Medical record created successfully' };
         } catch (error: any) {
             return { status: 500, message: error || 'Failed to create medical record' };
         }
     }
 
     static async updateMedicalRecord(id: number, medicalRecordData: Partial<MedicalRecordData>): Promise<ServiceResponse<any>> {
-    try {
-        const { status, message } = await isValidMedicalRecordUpdateData(medicalRecordData);
-        if (!id) return { status: 400, message: 'Invalid medical record ID' };
-        if (status !== 200) {
-            return { status, message };
+        try {
+            const { status, message } = await isValidMedicalRecordUpdateData(medicalRecordData);
+            if (!id) return { status: 400, message: 'Invalid medical record ID' };
+            if (status !== 200) {
+                return { status, message };
+            }
+            await commandQueue.add('updateMedicalRecord', { id, ...medicalRecordData });
+            return { status: 200, message: 'Medical record updated successfully' };
+        } catch (error: any) {
+            return { status: 500, message: error || 'Failed to update medical record' };
         }
-        const jobId = `updateMedicalRecord-${id}`;
-        await commandQueue.add('updateMedicalRecord', { id, ...medicalRecordData }, { jobId });
-        return { status: 200, message: 'Medical record update job added to queue' };
-    } catch (error: any) {
-        return { status: 500, message: error || 'Failed to update medical record' };
     }
-}
 
     static async deleteMedicalRecord(id: number): Promise<ServiceResponse<void>> {
         try {
@@ -41,9 +39,8 @@ export class MedicalRecordCommandService {
             if (status !== 200) {
                 return { status, message };
             }
-            const jobId = `deleteMedicalRecord-${id}`;
-            await commandQueue.add('deleteMedicalRecord', { id }, { jobId });
-            return { status: 204, message: 'Medical record deletion job added to queue' };
+            await commandQueue.add('deleteMedicalRecord', { id });
+            return { status: 204, message: 'Medical record deleted successfully' };
         } catch (error: any) {
             return { status: 500, message: error || 'Failed to delete medical record' };
         }

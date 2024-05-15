@@ -1,8 +1,6 @@
 import { queryQueue, queryQueueEvents } from '../../../config/bullmq';
 import { ServiceResponse } from '../../../@types/ServiceResponse';
 import { MedicalRecordModel } from '../../models/MedicalRecordModel';
-import puppeteer from 'puppeteer';
-import { createAtestado } from '../../utils/functions/createAtestado';
 
 export class MedicalRecordQueryService {
     static async listMedicalRecords(): Promise<ServiceResponse<any[]>> {
@@ -30,8 +28,7 @@ export class MedicalRecordQueryService {
         }
 
         const record = response.data;
-        const pdf = await MedicalRecordModel.generateAtestado(record);  
-        
+        const pdf = await MedicalRecordModel.generateAtestado(record);
 
         return { status: 200, data: pdf, message: 'Atestado generated successfully' };
     }

@@ -21,9 +21,8 @@ export class UserCommandService {
             }
             const hashedPassword = await bcrypt.hash(userData.password, 10);
             userData.password = hashedPassword;
-            const jobId = `createUser-${userData.email}`;
-            await commandQueue.add('createUser', userData, { jobId });
-            return { status: 201, message: 'User creation job added to queue' };
+            await commandQueue.add('createUser', userData);
+            return { status: 201, message: 'User creation added to queue' };
         } catch (error) {
             return { status: 500, message: 'Error creating user' };
         }
@@ -41,9 +40,8 @@ export class UserCommandService {
             if (userData.password) {
                 userData.password = await bcrypt.hash(userData.password, 10);
             }
-            const jobId = `updateUser-${id}`;
-            await commandQueue.add('updateUser', { id, ...userData }, { jobId });
-            return { status: 200, message: "User update job added to queue" };
+            await commandQueue.add('updateUser', { id, ...userData });
+            return { status: 200, message: 'User updated successfully' };
         } catch (error) {
             return { status: 500, message: 'Error updating user' };
         }
@@ -55,19 +53,14 @@ export class UserCommandService {
             if (!user) {
                 return { status: 500, message: 'This account doesn\'t exist.' };
             }
-            const jobId = `deleteUser-${id}`;
-            
-            const job = await commandQueue.add('deleteUser', { id }, { jobId });
-            
-            await job.waitUntilFinished(commandQueueEvents);
-            
-            return { status: 202, message: 'User deletion job added to queue' };
+            // const jobId = `deleteUser-${id}`;
+            await commandQueue.add('deleteUser', { id });
+            return { status: 202, message: 'User deleted added to queue' };
         } catch (error) {
             console.error('Error deleting user:', error);
             return { status: 500, message: 'Error deleting user' };
         }
     }
-    
 
     static async loginUser(email: string, password: string): Promise<ServiceResponse<{ token: string }>> {
         try {

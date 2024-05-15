@@ -1,10 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model User {
@@ -14,54 +14,54 @@ model User {
   role     String
   email    String    @unique
   phone    String?
+  doctors  Doctor?
   patients Patient[]
-  doctors  Doctor[]
 }
 
 model Patient {
   id           Int             @id @default(autoincrement())
   userId       Int
-  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   firstName    String
   lastName     String
   dob          DateTime
   gender       String
   address      String
-  records      MedicalRecord[]
   appointments Appointment[]
+  records      MedicalRecord[]
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Doctor {
   id             Int             @id @default(autoincrement())
-  userId         Int
-  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int             @unique(map: "doctor_unique")
+  specialization String
+  availability   String
   firstName      String
   lastName       String
-  specialization String
-  availability   String // JSON representing the schedule
   appointments   Appointment[]
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   MedicalRecord  MedicalRecord[]
 }
 
 model Appointment {
   id              Int      @id @default(autoincrement())
   patientId       Int
-  patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
   doctorId        Int
-  doctor          Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
   appointmentDate DateTime
   startTime       DateTime
   endTime         DateTime
   status          String
+  doctor          Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
 
 model MedicalRecord {
   id          Int      @id @default(autoincrement())
   patientId   Int
-  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
   dateOfVisit DateTime
   doctorId    Int
-  doctor      Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
   diagnosis   String
   treatment   String
+  doctor      Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }

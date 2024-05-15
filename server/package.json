@@ -5,8 +5,10 @@
   "main": "./src/app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/app.js",
+    "start": "ts-node src/app.ts",
+    "start:worker": "ts-node src/worker.ts",
     "dev": "nodemon src/app.ts --exec ts-node src/app.ts",
+    "dev:2": "concurrently \"npm run start\" \"npm run start:worker\"",
     "build": "tsc"
   },
   "author": "",
@@ -16,6 +18,7 @@
     "@types/express": "^4.17.21",
     "@typescript-eslint/eslint-plugin": "^7.9.0",
     "@typescript-eslint/parser": "^7.9.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "globals": "^15.2.0",
     "nodemon": "^3.1.0",

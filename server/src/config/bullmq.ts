@@ -1,4 +1,3 @@
-// src/config/bullmq.ts
 import { Queue, Worker, QueueEvents } from 'bullmq';
 import IORedis from 'ioredis';
 import { UserCommandService } from '../api/services/user/UserCommandService';
@@ -9,6 +8,8 @@ import { MedicalRecordModel } from '../api/models/MedicalRecordModel';
 import { PatientModel } from '../api/models/PatientModel';
 
 const connection = new IORedis({
+    host: '127.0.0.1',
+    port: 6379,
     maxRetriesPerRequest: null,
 });
 
@@ -70,7 +71,6 @@ export const commandWorker = new Worker('commandQueue', async job => {
             case 'deletePatient':
                 await PatientModel.delete(job.data.id);
                 break;
-            // Add other command handlers here
             default:
                 console.log(`Unknown command job: ${job.name}`);
         }
@@ -80,35 +80,45 @@ export const commandWorker = new Worker('commandQueue', async job => {
     }
 }, { connection });
 
+commandWorker.on('completed', job => {
+    console.log(`Job completed with result ${job.returnvalue}`);
+});
 
+commandWorker.on('failed', (job, err) => {
+    console.error(`Job failed with error ${err}`);
+    console.log(`Job data: ${JSON.stringify(job?.data)}`);
+});
 
 export const queryWorker = new Worker('queryQueue', async job => {
     console.log(`Processing query job ${job.name} with data ${JSON.stringify(job.data)}`);
-    switch (job.name) {
-        case 'listUsers':
-            return await UserModel.getAllUsers();;
-        case 'getUser':
-            return await UserModel.getUserById(job.data.id);
-        case 'listAppointments':
-            return await AppointmentModel.findAll();;
-        case 'getAppointment':
-            return  await AppointmentModel.findOne(Number(job.id));
-        case 'listDoctors':
-            return await DoctorModel.getAllDoctors();;
-        case 'getDoctor':
-            return await DoctorModel.getDoctorById(Number(job.id));;
-        case 'listMedicalRecords':
-            return await MedicalRecordModel.findAll();;
-        case 'getMedicalRecord':
-            return await MedicalRecordModel.findOne(Number(job.id));
-        case 'generateAtestado':
-            return await MedicalRecordModel.generateAtestado(Number(job.id));
-        case 'listPatients':
-            return await PatientModel.findAll();
-        case 'getPatient':
-            return await PatientModel.findOne(Number(job.id));
-        // Add other query handlers here
-        default:
-            console.log(`Unknown query job: ${job.name}`);
+    try {
+        switch (job.name) {
+            case 'listUsers':
+                return await UserModel.getAllUsers();
+            case 'getUser':
+                return await UserModel.getUserById(job.data.id);
+            case 'listAppointments':
+                return await AppointmentModel.findAll();
+            case 'getAppointment':
+                return await AppointmentModel.findOne(Number(job.id));
+            case 'listDoctors':
+                return await DoctorModel.getAllDoctors();
+            case 'getDoctor':
+                return await DoctorModel.getDoctorById(Number(job.id));
+            case 'listMedicalRecords':
+                return await MedicalRecordModel.findAll();
+            case 'getMedicalRecord':
+                return await MedicalRecordModel.findOne(Number(job.id));
+            case 'generateAtestado':
+                return await MedicalRecordModel.generateAtestado(Number(job.id));
+            case 'listPatients':
+                return await PatientModel.findAll();
+            case 'getPatient':
+                return await PatientModel.findOne(Number(job.id));
+            default:
+                console.log(`Unknown query job: ${job.name}`);
+        }
+    } catch (error) {
+        console.log(`Error processing query job ${job.name}:`, error);
     }
 }, { connection });

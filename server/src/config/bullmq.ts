@@ -21,7 +21,6 @@ export const queryQueueEvents = new QueueEvents('queryQueue', { connection });
 
 export const commandWorker = new Worker('commandQueue', async job => {
     try {
-        console.log(`Processing command job ${job.name} with data ${JSON.stringify(job.data)}`);
         switch (job.name) {
             case 'createUser':
                 await UserModel.createUser(job.data);
@@ -90,7 +89,6 @@ commandWorker.on('failed', (job, err) => {
 });
 
 export const queryWorker = new Worker('queryQueue', async job => {
-    console.log(`Processing query job ${job.name} with data ${JSON.stringify(job.data)}`);
     try {
         switch (job.name) {
             case 'listUsers':

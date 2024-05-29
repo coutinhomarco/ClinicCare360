@@ -1,9 +1,6 @@
-
----
-
 # CliniCare360
 
-CliniCare360 is a comprehensive Health Clinic Management System designed to streamline the management of patient appointments, doctor schedules, and medical records. Built with React, Node.js, and PostgreSQL, this system offers secure access across different roles, including patients, doctors, and administrators.
+CliniCare360 is a comprehensive Health Clinic Management System designed to streamline the management of patient appointments, doctor schedules, and medical records. Built with Node.js, TypeScript, PostgreSQL, BullMQ, and CQRS architecture, this system offers secure access across different roles, including patients, doctors, and administrators.
 
 ## Features
 
@@ -33,14 +30,6 @@ Start with cloning the repository on your local machine:
 
 ```bash
 git clone git@github.com:coutinhomarco/ClinicCare360.git
-```
-
-To set up the frontend, run:
-
-```bash
-cd CliniCare360/client
-npm install
-npm start
 ```
 
 To set up the backend, run:
@@ -84,17 +73,59 @@ The following diagram shows the database structure for CliniCare360:
 
 ## Request flow
 
-The following diagram shows how the requests are handled for CliniCare360
+The following diagram shows how the requests are handled for CliniCare360:
 
 ![Request Flow](docs/flow.png)
 
+## Testing
+
+Automated tests are set up to ensure the validation logic is robust and handles different cases correctly. These tests are written using Jest and can be found in the `server/tests` directory.
+
+### Running Tests
+
+To run the tests, execute the following command in the `server` directory:
+
+```bash
+npm test
+```
+
+### Test Coverage
+
+The tests cover various scenarios for validating user, patient, doctor, appointment, and medical record data. The following validations are tested:
+
+- **User Validation**:
+  - Email already in use
+  - Missing required fields
+  - No update data provided
+  - User not found for deletion
+
+- **Patient Validation**:
+  - Missing required fields
+  - Patient already exists
+  - Patient does not exist for update
+  - Patient not found for deletion
+
+- **Doctor Validation**:
+  - Missing required fields
+  - Doctor already exists
+  - Doctor not found for deletion
+
+- **Appointment Validation**:
+  - Missing required fields
+  - Appointment not found for deletion
+
+- **Medical Record Validation**:
+  - Missing required fields
+  - Patient or doctor does not exist
+  - Medical record not found for update or deletion
 
 ## Built With
 
-- [React](https://reactjs.org/) - The web framework used for the frontend.
 - [Node.js](https://nodejs.org/) - The backend framework.
+- [TypeScript](https://www.typescriptlang.org/) - Typed JavaScript.
 - [PostgreSQL](https://www.postgresql.org/) - Database system.
 - [BullMQ](https://docs.bullmq.io/) - Job queue used for handling command and query processing.
+- [Jest](https://jestjs.io/) - Testing framework.
 
 ## Contributing
 
@@ -107,11 +138,3 @@ Please read [CONTRIBUTING.md](https://github.com/coutinhomarco/ClinicCare360/CON
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-- Hat tip to anyone whose code was used
-- Inspiration
-- etc
-
----

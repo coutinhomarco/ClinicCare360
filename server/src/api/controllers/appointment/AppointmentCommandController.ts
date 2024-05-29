@@ -5,19 +5,19 @@ export class AppointmentCommandController {
     static async createAppointment(req: Request, res: Response) {
         const appointmentData = req.body;
         const result = await AppointmentCommandService.createAppointment(appointmentData);
-        return res.status(result.status).json({ message: result.message });
+        return res.status(result.status).json({ message: result.message, data: result.data.jobId });
     }
 
     static async updateAppointment(req: Request, res: Response) {
         const id = parseInt(req.params.id);
         const appointmentData = req.body;
         const result = await AppointmentCommandService.updateAppointment(id, appointmentData);
-        return res.status(result.status).json({ message: result.message });
+        return res.status(result.status).json({ message: result.message, data: result.data.jobId });
     }
 
     static async deleteAppointment(req: Request, res: Response) {
         const id = parseInt(req.params.id);
         const result = await AppointmentCommandService.deleteAppointment(id);
-        return res.status(result.status).json({ message: result.message });
+        return res.status(result.status).json({ message: result.message, data: result.data.jobId });
     }
 }

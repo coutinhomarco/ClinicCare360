@@ -10,8 +10,8 @@ export class PatientCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('createPatient', patientData);
-        return { status: 201, message: 'Patient created successfully' };
+        const job = await commandQueue.add('createPatient', patientData);
+        return { status: 201, message: 'Patient created successfully', data: { jobId: job.id } };
     }
 
     static async updatePatient(id: number, patientData: Partial<PatientData>): Promise<ServiceResponse<any>> {
@@ -19,16 +19,16 @@ export class PatientCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('updatePatient', { id, ...patientData });
-        return { status: 200, message: 'Patient updated successfully' };
+        const job = await commandQueue.add('updatePatient', { id, ...patientData });
+        return { status: 200, message: 'Patient updated successfully', data: { jobId: job.id } };
     }
 
-    static async deletePatient(id: number): Promise<ServiceResponse<void>> {
+    static async deletePatient(id: number): Promise<ServiceResponse<any>> {
         const { status, message } = await isValidPatientDelete(id);
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('deletePatient', { id });
-        return { status: 204, message: 'Patient deleted successfully' };
+        const job = await commandQueue.add('deletePatient', { id });
+        return { status: 204, message: 'Patient deleted successfully', data: { jobId: job.id } };
     }
 }

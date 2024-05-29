@@ -10,7 +10,7 @@ import { MedicalRecordModel } from '../../models/MedicalRecordModel';
 const secret: string = process.env.JWT_SECRET || 'very_secret_key_here';
 
 export class UserCommandService {
-    static async createUser(userData: UserData): Promise<ServiceResponse<UserData>> {
+    static async createUser(userData: UserData): Promise<ServiceResponse<any>> {
         try {
             if (!isValidUserData(userData)) {
                 return { status: 400, message: 'Invalid user data' };
@@ -21,14 +21,14 @@ export class UserCommandService {
             }
             const hashedPassword = await bcrypt.hash(userData.password, 10);
             userData.password = hashedPassword;
-            await commandQueue.add('createUser', userData);
-            return { status: 201, message: 'User creation added to queue' };
+            const job = await commandQueue.add('createUser', userData);
+            return { status: 201, message: 'User creation added to queue', data: { jobId: job.id }};
         } catch (error) {
             return { status: 500, message: 'Error creating user' };
         }
     }
 
-    static async updateUser(id: number, userData: Partial<UserData>): Promise<ServiceResponse<UserData>> {
+    static async updateUser(id: number, userData: Partial<UserData>): Promise<ServiceResponse<any>> {
         try {
             if (Object.keys(userData).some(key => userData[key as keyof UserData] === undefined)) {
                 return { status: 400, message: 'Invalid data provided' };
@@ -40,21 +40,21 @@ export class UserCommandService {
             if (userData.password) {
                 userData.password = await bcrypt.hash(userData.password, 10);
             }
-            await commandQueue.add('updateUser', { id, ...userData });
-            return { status: 200, message: 'User updated successfully' };
+            const job = await commandQueue.add('updateUser', { id, ...userData });
+            return { status: 200, message: 'User update added to queue', data: { jobId: job.id }};
         } catch (error) {
             return { status: 500, message: 'Error updating user' };
         }
     }
 
-    static async deleteUser(id: number): Promise<ServiceResponse<void>> {
+    static async deleteUser(id: number): Promise<ServiceResponse<any>> {
         try {
             const user = await UserModel.getUserById(id);
             if (!user) {
                 return { status: 500, message: 'This account doesn\'t exist.' };
             }
-            await commandQueue.add('deleteUser', { id });
-            return { status: 202, message: 'User deleted added to queue' };
+            const job = await commandQueue.add('deleteUser', { id });
+            return { status: 202, message: 'User deleted added to queue', data: { jobId: job.id }};
         } catch (error) {
             console.error('Error deleting user:', error);
             return { status: 500, message: 'Error deleting user' };

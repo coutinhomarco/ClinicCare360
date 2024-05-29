@@ -11,8 +11,8 @@ export class MedicalRecordCommandService {
             if (status !== 200) {
                 return { status, message };
             }
-            await commandQueue.add('createMedicalRecord', medicalRecordData);
-            return { status: 201, message: 'Medical record created successfully' };
+            const job = await commandQueue.add('createMedicalRecord', medicalRecordData);
+            return { status: 201, message: 'Medical record created successfully', data: { jobId: job.id }};
         } catch (error: any) {
             return { status: 500, message: error || 'Failed to create medical record' };
         }
@@ -25,22 +25,22 @@ export class MedicalRecordCommandService {
             if (status !== 200) {
                 return { status, message };
             }
-            await commandQueue.add('updateMedicalRecord', { id, ...medicalRecordData });
-            return { status: 200, message: 'Medical record updated successfully' };
+            const job = await commandQueue.add('updateMedicalRecord', { id, ...medicalRecordData });
+            return { status: 200, message: 'Medical record updated successfully', data: { jobId: job.id }};
         } catch (error: any) {
             return { status: 500, message: error || 'Failed to update medical record' };
         }
     }
 
-    static async deleteMedicalRecord(id: number): Promise<ServiceResponse<void>> {
+    static async deleteMedicalRecord(id: number): Promise<ServiceResponse<any>> {
         try {
             if (!id) return { status: 400, message: 'Invalid medical record ID' };
             const { status, message } = await isValidMedicalRecordDelete(id);
             if (status !== 200) {
                 return { status, message };
             }
-            await commandQueue.add('deleteMedicalRecord', { id });
-            return { status: 204, message: 'Medical record deleted successfully' };
+            const job = await commandQueue.add('deleteMedicalRecord', { id });
+            return { status: 204, message: 'Medical record deleted successfully', data: { jobId: job.id }};
         } catch (error: any) {
             return { status: 500, message: error || 'Failed to delete medical record' };
         }

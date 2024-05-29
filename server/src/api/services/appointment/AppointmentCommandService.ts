@@ -10,8 +10,8 @@ export class AppointmentCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('createAppointment', appointmentData);
-        return { status: 201, message: 'Appointment created successfully' };
+        const job = await commandQueue.add('createAppointment', appointmentData);
+        return { status: 201, message: 'Appointment created successfully', data: { jobId: job.id }};
     }
 
     static async updateAppointment(id: number, appointmentData: Partial<AppointmentData>): Promise<ServiceResponse<any>> {
@@ -19,16 +19,16 @@ export class AppointmentCommandService {
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('updateAppointment', { id, ...appointmentData });
-        return { status: 200, message: 'Appointment updated successfully' };
+        const job = await commandQueue.add('updateAppointment', { id, ...appointmentData });
+        return { status: 200, message: 'Appointment updated successfully', data: { jobId: job.id }};
     }
 
-    static async deleteAppointment(id: number): Promise<ServiceResponse<void>> {
+    static async deleteAppointment(id: number): Promise<ServiceResponse<any>> {
         const { status, message } = await isValidAppointmentDelete(id);
         if (status !== 200) {
             return { status, message };
         }
-        await commandQueue.add('deleteAppointment', { id });
-        return { status: 204, message: 'Appointment deleted successfully' };
+        const job = await commandQueue.add('deleteAppointment', { id });
+        return { status: 204, message: 'Appointment deleted successfully',data: { jobId: job.id } };
     }
 }

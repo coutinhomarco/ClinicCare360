@@ -12,14 +12,14 @@ export class UserCommandController {
     static async createUser(req: Request, res: Response) {
         const userData = req.body;
         const result = await UserCommandService.createUser(userData);
-        res.status(result.status).json({ message: result.message });
+        res.status(result.status).json({ message: result.message , data: result.data.jobId});
     }
 
     static async updateUser(req: Request, res: Response) {
         const id = parseInt(req.params.id);
         const userData = req.body;
         const result = await UserCommandService.updateUser(id, userData);
-        res.status(result.status).json({ message: result.message });
+        res.status(result.status).json({ message: result.message , data: result.data.jobId});
     }
 
     static async deleteUser(req: RequestWithUser , res: Response) {
@@ -30,7 +30,7 @@ export class UserCommandController {
         }
         const id = parseInt(req.params.id);
         const result = await UserCommandService.deleteUser(id);
-        res.status(result.status).json({ message: result.message });
+        res.status(result.status).json({ message: result.message , data: result.data.jobId});
     }
 
     static async loginUser(req: Request, res: Response) {

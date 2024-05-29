@@ -4,8 +4,8 @@ import doctorRoutes from './api/routes/doctor/DoctorRoutes';
 import patientRoutes from './api/routes/patient/PatientRoutes';
 import appointmentRoutes from './api/routes/appointment/AppointmentRoutes';
 import medicalRecordsRoutes from './api/routes/medicalRecord/MedicalRecordRoutes';
-
-// import './config/bullmq';
+import jobRoutes from './api/routes/job/jobRoutes';
+import './config/bullmq';
 
 import { rateLimit } from 'express-rate-limit'
 
@@ -14,7 +14,6 @@ const limiter = rateLimit({
 	limit: 100,
 	standardHeaders: 'draft-7',
 	legacyHeaders: false,
-	// store: ... , // Redis, Memcached, etc. See below.
 })
 
 const app = express();
@@ -28,6 +27,7 @@ app.use('/api/doctors', doctorRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/medical-records', medicalRecordsRoutes);
+app.use('/api/jobs', jobRoutes)
 
 app.get('/', (req, res) => {
     res.send('Hello World!');

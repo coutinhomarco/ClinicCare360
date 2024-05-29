@@ -23,11 +23,11 @@ export class UserCommandController {
     }
 
     static async deleteUser(req: RequestWithUser , res: Response) {
-        // const role = req?.user?.role
-        // if (role !== 'admin') {
-        //     res.status(401).json({ message: 'Unauthorized' });
-        //     return;
-        // }
+        const role = req?.user?.role
+        if (role !== 'admin') {
+            res.status(401).json({ message: 'Unauthorized' });
+            return;
+        }
         const id = parseInt(req.params.id);
         const result = await UserCommandService.deleteUser(id);
         res.status(result.status).json({ message: result.message });

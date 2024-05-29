@@ -53,7 +53,6 @@ export class UserCommandService {
             if (!user) {
                 return { status: 500, message: 'This account doesn\'t exist.' };
             }
-            // const jobId = `deleteUser-${id}`;
             await commandQueue.add('deleteUser', { id });
             return { status: 202, message: 'User deleted added to queue' };
         } catch (error) {
